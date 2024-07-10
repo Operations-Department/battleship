@@ -33,6 +33,25 @@ class Gameboard {
 
         return this.desiredCoordinates;
     }
+        
+    //compare desired position array with occupied array - check if any spots are taken
+    occupiedSpotCheck() {
+        for (let i = 0; i < this.occupiedCoordinates.length; i++) {
+            const [occupiedX, occupiedY] = this.occupiedCoordinates[i];
+            
+            for (let j = 0; j < this.desiredCoordinates.length; j++) {
+                const [desiredX, desiredY] = this.desiredCoordinates[j];
+
+                //if the desired spot is already taken - return
+                if (occupiedX === desiredX && occupiedY === desiredY) {
+                    this.desiredCoordinates = [];
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     placeShip(ship, startPosition, orientation, marker) {
         
@@ -44,20 +63,8 @@ class Gameboard {
 
         this.setDesiredCoordinates(x, y, ship, orientation);
 
-        //compare desired position array with occupied array - check if any spots are taken
-        for (let i = 0; i < this.occupiedCoordinates.length; i++) {
-            const [occupiedX, occupiedY] = this.occupiedCoordinates[i];
-            
-            for (let j = 0; j < this.desiredCoordinates.length; j++) {
-                const [desiredX, desiredY] = this.desiredCoordinates[j];
-
-                //if the desired spot is already taken - return
-                if (occupiedX === desiredX && occupiedY === desiredY) {
-                    this.desiredCoordinates = [];
-                    return;
-                }
-            }
-        }
+        const isOccupied = this.occupiedSpotCheck();
+        if (isOccupied) return 'That spot is taken';
 
         //if spot not taken, add ship to desired position and update occupied coordinates array
         for (let i = 0; i < this.desiredCoordinates.length; i++) {
@@ -88,8 +95,8 @@ const cruiser = new Ship('Cruiser', 2);
 
 
 
-console.log(gb.placeShip(aircraftCarrier, [5, 6], 'vertical', 'AC'));
-// console.log(gb.placeShip(battleship, [6, 7], 'vertical', 'B'));
+console.log(gb.placeShip(aircraftCarrier, [5, 5], 'vertical', 'AC'));
+console.log(gb.placeShip(battleship, [6, 6], 'horizontal', 'B'));
 console.log(gb.board);
 console.log(gb.desiredCoordinates);
 console.log(gb.occupiedCoordinates);
