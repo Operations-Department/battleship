@@ -11,15 +11,22 @@ class Gameboard {
         this.ships = [];
     }
 
+    //prevent ship from going off the board
+    avoidOverBoard(x, y, orientation, ship) {
+        if (x < 0 || y < 0 || x > 9 || y > 9) return false;
+        if (orientation === 'horizontal' && y + ship.length > 10) return false;
+        else if (orientation === 'vertical' && x + ship.length > 10) return false;
+        return true;
+    }
+
     placeShip(ship, startPosition, orientation, marker) {
+        
         //get coordinates
         let [x, y] = startPosition;
 
-        //prevent going off the board
-        if (x < 0 || y < 0 || x > 9 || y > 9) return;
-        if (orientation === 'horizontal' && y + ship.length > 10) return;
-        else if (orientation === 'vertical' && x + ship.length > 10) return;
-
+        const isValid = this.avoidOverBoard(x, y, orientation, ship);
+        if (!isValid) return 'Invalid position';
+        
         //add to desired position array
         if (orientation === 'horizontal') {
             for (let i = 0; i < ship.length; i++) {
@@ -31,22 +38,30 @@ class Gameboard {
             }
         }
 
-        //check if any spots are taken - compare desired position array with occupied array
-        if (this.occupiedCoordinates.some(coords => this.desiredCoordinates.some(desired => desired[0] === coords[0] && desired[1] === coords[1]))) {
-            return 'That position is taken';
-        
-        //if not taken, add ship to desired position and update occupied coordinates array
-        } else {
-            for (let i = 0; i < this.desiredCoordinates.length; i++) {
-                const [row, col] = this.desiredCoordinates[i]; 
-                this.board[row][col] = marker;
-                this.occupiedCoordinates.push([row, col]);
-            }
+        //compare desired position array with occupied array - check if any spots are taken
+        for (let i = 0; i < this.occupiedCoordinates.length; i++) {
+            const [occupiedX, occupiedY] = this.occupiedCoordinates[i];
+            
+            for (let j = 0; j < this.desiredCoordinates.length; j++) {
+                const [desiredX, desiredY] = this.desiredCoordinates[j];
 
-            this.ships.push(ship);
+                //if the desired spot is already taken - return
+                if (occupiedX === desiredX && occupiedY === desiredY) {
+                    this.desiredCoordinates = [];
+                    return;
+                }
+            }
+        }
+
+        //if spot not taken, add ship to desired position and update occupied coordinates array
+        for (let i = 0; i < this.desiredCoordinates.length; i++) {
+            const [row, col] = this.desiredCoordinates[i]; 
+            this.board[row][col] = marker;
+            this.occupiedCoordinates.push([row, col]);
         }
 
         this.desiredCoordinates = [];
+        this.ships.push(ship);
     }
 
     receiveAttack() {
@@ -66,9 +81,9 @@ const submarine = new Ship('Submarine', 3)
 const cruiser = new Ship('Cruiser', 2);
 
 
-// console.log(gb.board);
+
 console.log(gb.placeShip(aircraftCarrier, [5, 6], 'vertical', 'AC'));
-console.log(gb.placeShip(battleship, [0, 6], 'horizontal', 'B'));
+// console.log(gb.placeShip(battleship, [6, 7], 'vertical', 'B'));
 console.log(gb.board);
 console.log(gb.desiredCoordinates);
 console.log(gb.occupiedCoordinates);
