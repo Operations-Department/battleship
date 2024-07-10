@@ -11,7 +11,7 @@ class Gameboard {
         this.ships = [];
     }
 
-    //prevent ship from going off the board
+    //prevent ship from going off the board *helper to placeShip method*
     avoidOverBoard(x, y, orientation, ship) {
         if (x < 0 || y < 0 || x > 9 || y > 9) return false;
         if (orientation === 'horizontal' && y + ship.length > 10) return false;
@@ -19,15 +19,8 @@ class Gameboard {
         return true;
     }
 
-    placeShip(ship, startPosition, orientation, marker) {
-        
-        //get coordinates
-        let [x, y] = startPosition;
-
-        const isValid = this.avoidOverBoard(x, y, orientation, ship);
-        if (!isValid) return 'Invalid position';
-        
-        //add to desired position array
+    //add to desired position array *helper to placeShip method*
+    setDesiredCoordinates(x, y, ship, orientation) {
         if (orientation === 'horizontal') {
             for (let i = 0; i < ship.length; i++) {
                 this.desiredCoordinates.push([x, y + i]);
@@ -37,6 +30,19 @@ class Gameboard {
                 this.desiredCoordinates.push([x + i, y]);
             }
         }
+
+        return this.desiredCoordinates;
+    }
+
+    placeShip(ship, startPosition, orientation, marker) {
+        
+        //get coordinates
+        let [x, y] = startPosition;
+
+        const isValid = this.avoidOverBoard(x, y, orientation, ship);
+        if (!isValid) return 'Invalid position';
+
+        this.setDesiredCoordinates(x, y, ship, orientation);
 
         //compare desired position array with occupied array - check if any spots are taken
         for (let i = 0; i < this.occupiedCoordinates.length; i++) {
