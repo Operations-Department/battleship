@@ -11,7 +11,8 @@ class Gameboard {
         this.ships = [];
     }
 
-    //prevent ship from going off the board *helper to placeShip method*
+    //prevent ship from going off the board 
+    //*helper to placeShip method*
     avoidOverBoard(x, y, orientation, ship) {
         if (x < 0 || y < 0 || x > 9 || y > 9) return false;
         if (orientation === 'horizontal' && y + ship.length > 10) return false;
@@ -19,7 +20,8 @@ class Gameboard {
         return true;
     }
 
-    //add to desired position array *helper to placeShip method*
+    //add to desired position array
+    //*helper to placeShip method*
     setDesiredCoordinates(x, y, ship, orientation) {
         if (orientation === 'horizontal') {
             for (let i = 0; i < ship.length; i++) {
@@ -35,6 +37,7 @@ class Gameboard {
     }
         
     //compare desired position array with occupied array - check if any spots are taken
+    //*helper to placeShip method*
     occupiedSpotCheck() {
         for (let i = 0; i < this.occupiedCoordinates.length; i++) {
             const [occupiedX, occupiedY] = this.occupiedCoordinates[i];
@@ -44,7 +47,7 @@ class Gameboard {
 
                 //if the desired spot is already taken - return
                 if (occupiedX === desiredX && occupiedY === desiredY) {
-                    this.desiredCoordinates = [];
+                    this.desiredCoordinates = [];  //clear array for next round
                     return true;
                 }
             }
@@ -66,15 +69,15 @@ class Gameboard {
         const isOccupied = this.occupiedSpotCheck();
         if (isOccupied) return 'That spot is taken';
 
-        //if spot not taken, add ship to desired position and update occupied coordinates array
+        //selected spot is on board and unoccupied - place ship on board
         for (let i = 0; i < this.desiredCoordinates.length; i++) {
             const [row, col] = this.desiredCoordinates[i]; 
             this.board[row][col] = marker;
-            this.occupiedCoordinates.push([row, col]);
+            this.occupiedCoordinates.push([row, col]); //update occupied coordinates
         }
 
-        this.desiredCoordinates = [];
-        this.ships.push(ship);
+        this.desiredCoordinates = []; //clear array for next round
+        this.ships.push(ship); //log ships to array
     }
 
     receiveAttack() {
@@ -95,11 +98,9 @@ const cruiser = new Ship('Cruiser', 2);
 
 
 
-console.log(gb.placeShip(aircraftCarrier, [5, 5], 'vertical', 'AC'));
-console.log(gb.placeShip(battleship, [6, 6], 'horizontal', 'B'));
+console.log(gb.placeShip(aircraftCarrier, [5, 4], 'vertical', 'AC'));
+console.log(gb.placeShip(battleship, [5, 6], 'vertical', 'B'));
 console.log(gb.board);
-console.log(gb.desiredCoordinates);
-console.log(gb.occupiedCoordinates);
 
 
 
