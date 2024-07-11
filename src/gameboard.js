@@ -16,9 +16,6 @@ class Gameboard {
         
         this.occupiedCoordinates = [];  //stores spots that are taken - prevent overlap ships
         this.desiredCoordinates = [];   //compares with occupied when placing ship - prevent overlap ships
-        
-        this.ships = [];                //stores all ships that are in play
-        
         this.firedUpon = [];            //stores all coordinates that have been fired upon already
         this.hits = [];                 //stores all coordinates that were hit
         this.misses = [];               //stores all coordinates that were misses
@@ -98,7 +95,6 @@ class Gameboard {
         }
 
         this.desiredCoordinates = []; //clear array for next round
-        this.ships.push(ship); //log placed ships to array
     }
 
     //check if selected spot has already been shot
@@ -139,7 +135,7 @@ class Gameboard {
     }
 
     allShipsSunk() {
-
+        return Object.values(this.shipsObject).every(ship => ship && ship.isSunk);
     }
 }
 
@@ -150,7 +146,6 @@ gb.placeShip(battleship, [4, 0], 'horizontal', 'B');
 gb.placeShip(destroyer, [0, 8], 'vertical', 'D');
 gb.placeShip(submarine, [7, 9], 'vertical', 'SUB');
 gb.placeShip(cruiser, [8, 8], 'vertical', 'C');
-// console.table(gb.board);
 
 console.log(gb.receiveAttack([0, 0]));
 console.log(gb.receiveAttack([0, 0]));
@@ -170,6 +165,7 @@ console.log(cruiser);
 console.log('Misses: ', gb.misses);
 console.log('Hits: ',gb.hits);
 console.log('Already shot at: ',gb.firedUpon);
+console.log('All ships sunk: ', gb.allShipsSunk());
 
 console.table(gb.board);
 
