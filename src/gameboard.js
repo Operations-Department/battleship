@@ -16,7 +16,9 @@ class Gameboard {
         
         this.occupiedCoordinates = [];  //stores spots that are taken - prevent overlap ships
         this.desiredCoordinates = [];   //compares with occupied when placing ship - prevent overlap ships
+        
         this.ships = [];                //stores all ships that are in play
+        
         this.firedUpon = [];            //stores all coordinates that have been fired upon already
         this.hits = [];                 //stores all coordinates that were hit
         this.misses = [];               //stores all coordinates that were misses

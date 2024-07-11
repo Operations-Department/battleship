@@ -32,3 +32,27 @@ test('Returns error message for overlapping position', () => {
     expect(firstPlacement).toBeUndefined();
     expect(secondPlacement).toBe('That spot is taken');
 });
+
+//attacking => 'hit'
+test('Returns "Hit" message, updates the board to reflect that hit', () => {
+    gb.placeShip(battleship, [5, 4], 'horizontal', 'B');
+    const hit = gb.receiveAttack([5, 4]);
+    expect(hit).toBe('Hit!');
+    expect(gb.board[5][4]).toBe('x');
+});
+
+//attacking => 'miss'
+test('Returns "Miss", updates the board to reflect that missed shot', () => {
+    gb.placeShip(battleship, [5, 4], 'horizontal', 'B'); //ship spans [5, 4], [5, 5], [5, 6], [5, 7] 
+    const miss = gb.receiveAttack([5, 3]);
+    expect(miss).toBe('Miss');
+    expect(gb.board[5][3]).toBe('o');
+});
+
+//attacking the same spot twice
+test('Returns error message when firing on the same spot again', () => {
+    gb.placeShip(battleship, [5, 4], 'horizontal', 'B');
+    gb.receiveAttack([5, 3]);
+    const secondShot = gb.receiveAttack([5, 3]);
+    expect(secondShot).toBe('You already shot there');
+});
