@@ -1,14 +1,33 @@
 const Ship = require('./ship');
 
+//instantiate all valid ships for the game
+const aircraftCarrier = new Ship('Aircraft Carrier', 5);
+const battleship = new Ship('Battleship', 4);
+const destroyer = new Ship('Destroyer', 3);
+const submarine = new Ship('Submarine', 3)
+const cruiser = new Ship('Cruiser', 2);
+
 class Gameboard {
     constructor() {
         this.board = [];
         for (let i = 0; i < 10; i++) {
             this.board.push(new Array(10).fill(null));
         }
-        this.occupiedCoordinates = [];
-        this.desiredCoordinates = [];
-        this.ships = [];
+        
+        this.occupiedCoordinates = [];  //stores spots that are taken - prevent overlap ships
+        this.desiredCoordinates = [];   //compares with occupied when placing ship - prevent overlap ships
+        this.ships = [];                //stores all ships that are in play
+        this.firedUpon = [];            //stores all coordinates that have been fired upon already
+        this.hits = [];                 //stores all coordinates that were hit
+        this.misses = [];               //stores all coordinates that were misses
+        
+        this.shipsObject = {
+            'AC': aircraftCarrier,
+            'B': battleship,
+            'D': destroyer,
+            'SUB': submarine,
+            'C': cruiser
+        }
     }
 
     //prevent ship from going off the board 
@@ -77,11 +96,44 @@ class Gameboard {
         }
 
         this.desiredCoordinates = []; //clear array for next round
-        this.ships.push(ship); //log ships to array
+        this.ships.push(ship); //log placed ships to array
     }
 
-    receiveAttack() {
+    //check if selected spot has already been shot
+    //*helper function to receiveAttack method*
+    firedCheck(x, y) {
+        for (let i = 0; i < this.firedUpon.length; i++) {
+            const [firedUponX, firedUponY] = this.firedUpon[i];
+            if (x === firedUponX && y === firedUponY) return true;
+        }
 
+        return false;
+    }
+
+    //take hit - show on board
+    receiveAttack(attackCoordinates) {
+        const [x, y] = attackCoordinates;
+        const location = this.board[x][y];
+
+        const alreadyShot = this.firedCheck(x, y);
+        if (alreadyShot) return 'You already shot there';
+
+        //send coordinates to array - can't fire upon again
+        this.firedUpon.push([x, y]);
+
+        //attack missed - show on board
+        if (location === null) {
+            this.misses.push([x, y]);
+            this.board[x][y] = 'o';
+            return 'Miss';
+        
+        //attack hit - show on board and send damage to ship class
+        } else {
+            this.hits.push([x, y]);
+            if (this.shipsObject[location]) this.shipsObject[location].getHit();
+            this.board[x][y] = 'x';
+            return 'Hit!';
+        }
     }
 
     allShipsSunk() {
@@ -90,18 +142,33 @@ class Gameboard {
 }
 
 const gb = new Gameboard();
-const aircraftCarrier = new Ship('Aircraft Carrier', 5);
-const battleship = new Ship('Battleship', 4);
-const destroyer = new Ship('Destroyer', 3);
-const submarine = new Ship('Submarine', 3)
-const cruiser = new Ship('Cruiser', 2);
 
+gb.placeShip(aircraftCarrier, [5, 4], 'vertical', 'AC');
+gb.placeShip(battleship, [4, 0], 'horizontal', 'B');
+gb.placeShip(destroyer, [0, 8], 'vertical', 'D');
+gb.placeShip(submarine, [7, 9], 'vertical', 'SUB');
+gb.placeShip(cruiser, [8, 8], 'vertical', 'C');
+// console.table(gb.board);
 
+console.log(gb.receiveAttack([0, 0]));
+console.log(gb.receiveAttack([0, 0]));
+console.log(gb.receiveAttack([6, 4]));
+console.log(gb.receiveAttack([6, 4]));
+console.log(gb.receiveAttack([4, 4]));
+console.log(gb.receiveAttack([5, 4]));
+console.log(gb.receiveAttack([8, 8]));
+console.log(gb.receiveAttack([9, 8]));
 
-console.log(gb.placeShip(aircraftCarrier, [5, 4], 'vertical', 'AC'));
-console.log(gb.placeShip(battleship, [5, 6], 'vertical', 'B'));
-console.log(gb.board);
+console.log(aircraftCarrier);
+console.log(battleship);
+console.log(destroyer);
+console.log(submarine);
+console.log(cruiser);
 
+console.log('Misses: ', gb.misses);
+console.log('Hits: ',gb.hits);
+console.log('Already shot at: ',gb.firedUpon);
 
+console.table(gb.board);
 
 module.exports = Gameboard;
