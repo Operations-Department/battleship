@@ -22,3 +22,7 @@ export function setupBoardUI(boardID) {
         board.appendChild(row);
     }
 };
+
+export function handleAttack() {
+
+};

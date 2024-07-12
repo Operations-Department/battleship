@@ -1,7 +1,7 @@
 const Ship = require('./ship');
 const Gameboard= require('./gameboard');
 const Player = require('./player');
-import { setupBoardUI } from './domManager';
+import { setupBoardUI, handleAttack } from './domManager';
 
 //instantiate ships
 const aircraftCarrier = new Ship('Aircraft Carrier', 5);
@@ -31,3 +31,18 @@ const computerBoard = computer.gameboard;
 
 setupBoardUI('player');
 setupBoardUI('computer');
+
+//click cell to trigger attack on opponent
+document.getElementById('computer-board').addEventListener('click', (e) => {
+    const coordinates = getCoordinates(e);  
+    handleAttack();
+});
+
+//get coordinates when computer board cell clicked
+function getCoordinates(e) {
+
+    const x = e.target.dataset.x;
+    const y = e.target.dataset.y;
+
+    return [x, y];
+}
