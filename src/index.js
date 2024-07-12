@@ -35,7 +35,7 @@ setupBoardUI('computer');
 //click cell to trigger attack on opponent
 document.getElementById('computer-board').addEventListener('click', (e) => {
     const coordinates = getCoordinates(e);  
-    handleAttack();
+    handleAttack(player, computer, coordinates);
 });
 
 //get coordinates when computer board cell clicked

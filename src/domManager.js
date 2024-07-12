@@ -23,6 +23,28 @@ export function setupBoardUI(boardID) {
     }
 };
 
-export function handleAttack() {
+//receive coordinates
+export function handleAttack(player, opponent, coordinates) {
+    //send attack to gameboard/ship objects
+    const result = opponent.gameboard.receiveAttack(coordinates);
+    
+    console.table(opponent.gameboard.board);
+    console.log(result);
 
+    //update ui to reflect changes
+    updateUI(result, coordinates);
+
+    //check gameover
+    if (opponent.gameboard.allShipsSunk()) {
+        alert(`${player.name} wins`);
+    }
+};
+
+function updateUI( result, coordinates) {
+    const [x, y] = coordinates;
+    const cell = document.querySelector(`.computer-board [data-x="${x}"][data-y="${y}"]`);
+    
+    if (result === 'Miss') cell.textContent = 'o';
+    else if (result === 'Hit!') cell.textContent = 'x';
+    else console.error('error: something went wrong');
 };
