@@ -139,34 +139,34 @@ class Gameboard {
     }
 }
 
-const gb = new Gameboard();
+// const gb = new Gameboard();
 
-gb.placeShip(aircraftCarrier, [5, 4], 'vertical', 'AC');
-gb.placeShip(battleship, [4, 0], 'horizontal', 'B');
-gb.placeShip(destroyer, [0, 8], 'vertical', 'D');
-gb.placeShip(submarine, [7, 9], 'vertical', 'SUB');
-gb.placeShip(cruiser, [8, 8], 'vertical', 'C');
+// gb.placeShip(aircraftCarrier, [5, 4], 'vertical', 'AC');
+// gb.placeShip(battleship, [4, 0], 'horizontal', 'B');
+// gb.placeShip(destroyer, [0, 8], 'vertical', 'D');
+// gb.placeShip(submarine, [7, 9], 'vertical', 'SUB');
+// gb.placeShip(cruiser, [8, 8], 'vertical', 'C');
 
-console.log(gb.receiveAttack([0, 0]));
-console.log(gb.receiveAttack([0, 0]));
-console.log(gb.receiveAttack([6, 4]));
-console.log(gb.receiveAttack([6, 4]));
-console.log(gb.receiveAttack([4, 4]));
-console.log(gb.receiveAttack([5, 4]));
-console.log(gb.receiveAttack([8, 8]));
-console.log(gb.receiveAttack([9, 8]));
+// console.log(gb.receiveAttack([0, 0]));
+// console.log(gb.receiveAttack([0, 0]));
+// console.log(gb.receiveAttack([6, 4]));
+// console.log(gb.receiveAttack([6, 4]));
+// console.log(gb.receiveAttack([4, 4]));
+// console.log(gb.receiveAttack([5, 4]));
+// console.log(gb.receiveAttack([8, 8]));
+// console.log(gb.receiveAttack([9, 8]));
 
-console.log(aircraftCarrier);
-console.log(battleship);
-console.log(destroyer);
-console.log(submarine);
-console.log(cruiser);
+// console.log(aircraftCarrier);
+// console.log(battleship);
+// console.log(destroyer);
+// console.log(submarine);
+// console.log(cruiser);
 
-console.log('Misses: ', gb.misses);
-console.log('Hits: ',gb.hits);
-console.log('Already shot at: ',gb.firedUpon);
-console.log('All ships sunk: ', gb.allShipsSunk());
+// console.log('Misses: ', gb.misses);
+// console.log('Hits: ',gb.hits);
+// console.log('Already shot at: ',gb.firedUpon);
+// console.log('All ships sunk: ', gb.allShipsSunk());
 
-console.table(gb.board);
+// console.table(gb.board);
 
 module.exports = Gameboard;
