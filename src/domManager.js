@@ -1,4 +1,3 @@
-
 //setup player and comp board ui
 export function setupBoardUI(boardID) {
     const board = document.getElementById(`${boardID}-board`);
@@ -32,16 +31,16 @@ export function handleAttack(player, opponent, coordinates) {
     console.log(result);
 
     //update ui to reflect changes
-    updateUI(result, coordinates);
+    updateUI(opponent.type, result, coordinates);
 
     //check gameover
     if (opponent.gameboard.allShipsSunk()) gameOver(player);
 };
 
-function updateUI(result, coordinates) {
+function updateUI(player, result, coordinates) {
+
     const [x, y] = coordinates;
-    const cell = document.querySelector(`.computer-board [data-x="${x}"][data-y="${y}"]`);
-    
+    const cell = document.querySelector(`.${player}-board [data-x="${x}"][data-y="${y}"]`);
     if (result === 'Miss') cell.textContent = 'o';
     else if (result === 'Hit!') cell.textContent = 'x';
     else console.error('error: something went wrong');
