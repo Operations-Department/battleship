@@ -35,12 +35,10 @@ export function handleAttack(player, opponent, coordinates) {
     updateUI(result, coordinates);
 
     //check gameover
-    if (opponent.gameboard.allShipsSunk()) {
-        alert(`${player.name} wins`);
-    }
+    if (opponent.gameboard.allShipsSunk()) gameOver(player);
 };
 
-function updateUI( result, coordinates) {
+function updateUI(result, coordinates) {
     const [x, y] = coordinates;
     const cell = document.querySelector(`.computer-board [data-x="${x}"][data-y="${y}"]`);
     
@@ -48,3 +46,34 @@ function updateUI( result, coordinates) {
     else if (result === 'Hit!') cell.textContent = 'x';
     else console.error('error: something went wrong');
 };
+
+function gameOver(player) {
+
+    const page = document.getElementById('app');
+
+    //create semi-transparent overlay
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+
+    page.appendChild(overlay);
+
+    //game over text
+    const title = document.createElement('h1');
+    title.textContent = 'Game Over';
+
+    const subTitle = document.createElement('h2');
+    subTitle.textContent = `${player.name} wins!`;
+
+    overlay.appendChild(title);
+    overlay.appendChild(subTitle);
+
+    //button to play again
+    const restart = document.createElement('button');
+    restart.textContent = 'Play Again?';
+
+    overlay.appendChild(restart);
+
+    restart.addEventListener('click', () => {
+        window.location.reload(); //reload the page
+    });
+}

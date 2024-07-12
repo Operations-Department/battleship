@@ -1,8 +1,8 @@
 const Gameboard = require('./gameboard');
 
 class Player {
-    constructor(type) {
-        this.type = type; // person or computer
+    constructor(name) {
+        this.name = name; //person or computer
         this.gameboard = new Gameboard();
     }
 }
