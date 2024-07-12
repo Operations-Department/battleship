@@ -97,25 +97,31 @@ test('Returns true if all ships have been sunk', () => {
     gb.placeShip(cruiser, [4, 0], 'horizontal', 'C');
 
     //sink all ships
+    //carrier
     gb.receiveAttack([0, 0]);
     gb.receiveAttack([0, 1]);
     gb.receiveAttack([0, 2]);
     gb.receiveAttack([0, 3]);
-    gb.receiveAttack([0, 4]);
-
+    gb.receiveAttack([0, 4]);//sunk
+    //battleship
     gb.receiveAttack([1, 0]);
     gb.receiveAttack([1, 1]);
     gb.receiveAttack([1, 2]);
-    gb.receiveAttack([1, 3]);
-
+    gb.receiveAttack([1, 3]);//sunk
+    //destroyer
     gb.receiveAttack([2, 0]);   
     gb.receiveAttack([2, 1]);
-    gb.receiveAttack([2, 2]);
+    gb.receiveAttack([2, 2]);//sunk
+    //sub
     gb.receiveAttack([3, 0]);
     gb.receiveAttack([3, 1]);
-    gb.receiveAttack([3, 2]);
+    gb.receiveAttack([3, 2]);//sunk
+    //cruiser
     gb.receiveAttack([4, 0]);
-    gb.receiveAttack([4, 1]);
+
+    expect(gb.allShipsSunk()).toBe(false);
+
+    gb.receiveAttack([4, 1]);//sunk
 
     expect(gb.allShipsSunk()).toBe(true);
 });
