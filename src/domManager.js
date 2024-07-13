@@ -34,7 +34,11 @@ export function handleAttack(player, opponent, coordinates) {
     updateUI(opponent.type, result, coordinates);
 
     //check gameover
-    if (opponent.gameboard.allShipsSunk()) gameOver(player);
+    if (opponent.gameboard.allShipsSunk()) {
+        console.log('player: ', player.gameboard);
+        console.log('opponent: ', opponent.gameboard);
+        gameOver(player);
+    }
 };
 
 function updateUI(player, result, coordinates) {

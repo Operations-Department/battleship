@@ -40,13 +40,13 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
     const coordinates = getCoordinates(e);  
     handleAttack(player, computer, coordinates);
     playersTurn = false;
-    computerAttack(player);
+    computerAttack();
 });
 
 //computer attacks random spot
-function computerAttack(player) {
+function computerAttack() {
     if (playersTurn) return;
-    const coordinates = generateRandomNumber(player);
+    const coordinates = generateRandomCoordinates();
     handleAttack(computer, player, coordinates);
     playersTurn = true;
 }
@@ -59,12 +59,21 @@ function getCoordinates(e) {
     return [x, y];
 }
 
-//generate random number 0-9
-function generateRandomNumber(player) {
-    const x = Math.floor(Math.random()*10);
-    const y = Math.floor(Math.random()*10);
+//store for computer attack
+let array = [];
+for (let i = 0; i < 99; i++ ) {
+    array.push(i);
+};
 
-    console.log(player.gameboard.firedUpon);
+//select random index from array - avoids picking the same one twice
+function generateRandomCoordinates() {
+    let randomIndex = Math.floor(Math.random() * array.length);
 
-    return [x, y];
+    let number = array.splice(randomIndex, 1)[0];
+
+    let coordinates = number.toString().split('').map(Number);
+
+    if (coordinates.length === 1) coordinates.unshift(0);
+
+    return coordinates;
 }
