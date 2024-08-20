@@ -23,22 +23,28 @@ export function setupBoardUI(boardID) {
 };
 
 //receive coordinates
-export function handleAttack(player, opponent, coordinates) {
+export function handleAttack(player, opponent, coordinates, gameFinished) {
     //send attack to gameboard/ship objects
     const result = opponent.gameboard.receiveAttack(coordinates);
     
+    console.log(`${opponent.name}`);
     console.table(opponent.gameboard.board);
-    console.log(result);
+    // console.log(result);
 
     //update ui to reflect changes
     updateUI(opponent.type, result, coordinates);
 
+    gameFinished = false;
+
     //check gameover
     if (opponent.gameboard.allShipsSunk()) {
-        console.log('player: ', player.gameboard);
-        console.log('opponent: ', opponent.gameboard);
+        console.log(`${player.name}`, player.gameboard);
+        console.log(`${opponent.name}`, opponent.gameboard);
         gameOver(player);
+        gameFinished = true;
     }
+
+    return gameFinished;
 };
 
 function updateUI(player, result, coordinates) {

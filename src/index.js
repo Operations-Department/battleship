@@ -41,16 +41,17 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
         return;
     };
     const coordinates = getCoordinates(e);  
-    handleAttack(player, computer, coordinates);
+    let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
     playersTurn = false;
-    computerAttack();
+    computerAttack(gameFinished);
 });
 
 //computer attacks random spot
-function computerAttack() {
-    if (playersTurn) return;
+function computerAttack(gameFinished) {
+    if (playersTurn | gameFinished) return;
+    
     const coordinates = generateRandomCoordinates();
-    handleAttack(computer, player, coordinates);
+    handleAttack(computer, player, coordinates, gameFinished);
     playersTurn = true;
 }
 
