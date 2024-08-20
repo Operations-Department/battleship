@@ -36,7 +36,10 @@ let playersTurn = true;
 
 //click cell to trigger attack on opponent
 document.getElementById('computer-board').addEventListener('click', (e) => {
-    if (!playersTurn) return;
+    if (!playersTurn) {
+        computerAttack();
+        return;
+    };
     const coordinates = getCoordinates(e);  
     handleAttack(player, computer, coordinates);
     playersTurn = false;
@@ -61,7 +64,7 @@ function getCoordinates(e) {
 
 //store for computer attack
 let array = [];
-for (let i = 0; i < 99; i++ ) {
+for (let i = 0; i <= 99; i++ ) {
     array.push(i);
 };
 

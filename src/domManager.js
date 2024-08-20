@@ -45,9 +45,17 @@ function updateUI(player, result, coordinates) {
 
     const [x, y] = coordinates;
     const cell = document.querySelector(`.${player}-board [data-x="${x}"][data-y="${y}"]`);
+    
+    //disable from being clicked again
+    cell.style.cursor = 'not-allowed';
+    cell.style.pointerEvents = 'none';
+
     if (result === 'Miss') cell.textContent = 'o';
-    else if (result === 'Hit!') cell.textContent = 'x';
-    else console.error('error: something went wrong');
+    else if (result === 'Hit!') {
+        cell.textContent = 'x';
+        cell.style.color = 'red';
+    }
+    else console.error(new Error('Something wrong happened'));
 };
 
 function gameOver(player) {
