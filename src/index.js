@@ -21,17 +21,17 @@ const compCruiser = new Ship('Cruiser', 2);
 const player = new Player('Player', 'player');
 const computer = new Player('Computer', 'computer');
 
-player.gameboard.placeShip(playerAircraftCarrier, [0, 0], 'vertical', 'AC');
-player.gameboard.placeShip(playerBattleship, [6, 2], 'horizontal', 'B');
-player.gameboard.placeShip(playerDestroyer, [6, 6], 'vertical', 'D');
-player.gameboard.placeShip(playerSubmarine, [5, 5], 'horizontal', 'SUB');
-player.gameboard.placeShip(playerCruiser, [8, 9], 'vertical', 'C');
+player.gameboard.placeShip(playerAircraftCarrier, [0, 0], 'vertical', 'pAC');
+player.gameboard.placeShip(playerBattleship, [6, 2], 'horizontal', 'pB');
+player.gameboard.placeShip(playerDestroyer, [6, 6], 'vertical', 'pD');
+player.gameboard.placeShip(playerSubmarine, [5, 5], 'horizontal', 'pSUB');
+player.gameboard.placeShip(playerCruiser, [8, 9], 'vertical', 'pC');
 
-computer.gameboard.placeShip(compAircraftCarrier, [4, 3], 'vertical', 'AC');
-computer.gameboard.placeShip(compBattleship, [3, 2], 'horizontal', 'B');
-computer.gameboard.placeShip(compDestroyer, [3, 6], 'vertical', 'D');
-computer.gameboard.placeShip(compSubmarine, [8, 4], 'horizontal', 'SUB');
-computer.gameboard.placeShip(compCruiser, [6, 6], 'vertical', 'C');
+computer.gameboard.placeShip(compAircraftCarrier, [4, 3], 'vertical', 'cAC');
+computer.gameboard.placeShip(compBattleship, [3, 2], 'horizontal', 'cB');
+computer.gameboard.placeShip(compDestroyer, [3, 6], 'vertical', 'cD');
+computer.gameboard.placeShip(compSubmarine, [8, 4], 'horizontal', 'cSUB');
+computer.gameboard.placeShip(compCruiser, [6, 6], 'vertical', 'cC');
 
 setupBoardUI('player');
 setupBoardUI('computer');
@@ -48,8 +48,7 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
     let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
 
     console.table(computer.gameboard.board);
-    console.log('computer ships', computer.gameboard.shipsObject);
-    console.log('player ships', player.gameboard.shipsObject);
+    console.log('computer ships', computer.gameboard.compShipsObject);
 
     playersTurn = false;
     computerAttack(gameFinished);
@@ -57,10 +56,13 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
 
 //computer attacks random spot
 function computerAttack(gameFinished) {
-    if (playersTurn || gameFinished) return;
-    
+    if (playersTurn || gameFinished) return;    
     const coordinates = generateRandomCoordinates();
     handleAttack(computer, player, coordinates, gameFinished);
+
+    console.table(player.gameboard.board);
+    console.log('player ships', player.gameboard.playerShipsObject);
+
     playersTurn = true;
 }
 

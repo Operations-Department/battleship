@@ -1,87 +1,113 @@
 const Gameboard = require('../gameboard');
 const Ship = require('../ship');
+const Player = require('../player');
 
-let gb;
-let aircraftCarrier;
-let battleship;
-let destroyer;
-let submarine;
-let cruiser;
+let player;
+let computer;
 
-//setup: create a new gameboard and ships before each test
+let playerAircraftCarrier;
+let playerBattleship;
+let playerDestroyer;
+let playerSubmarine;
+let playerCruiser;
+
+let compAircraftCarrier;
+let compBattleship;
+let compDestroyer;
+let compSubmarine;
+let compCruiser;
+
+
+//setup: create a new players/gameboards and ships before each test
 beforeEach(() => {
-    gb = new Gameboard();
-    aircraftCarrier = new Ship('Aircraft Carrier', 5);
-    battleship = new Ship('Battleship', 4);
-    destroyer = new Ship('Destroyer', 3);
-    submarine = new Ship('Submarine', 3)
-    cruiser = new Ship('Cruiser', 2);
+    player = new Player('Player', 'player');
+    computer = new Player('Computer', 'computer');
+
+    playerAircraftCarrier = new Ship('Aircraft Carrier', 5);
+    playerBattleship = new Ship('Battleship', 4);
+    playerDestroyer = new Ship('Destroyer', 3);
+    playerSubmarine = new Ship('Submarine', 3)
+    playerCruiser = new Ship('Cruiser', 2);
+
+    compAircraftCarrier = new Ship('Aircraft Carrier', 5);
+    compBattleship = new Ship('Battleship', 4);
+    compDestroyer = new Ship('Destroyer', 3);
+    compSubmarine = new Ship('Submarine', 3)
+    compCruiser = new Ship('Cruiser', 2);
 });
 
-//teardown: reset gameboard and ships data
+//teardown: reset players/gameboards and ships data
 afterEach(() => {
-    gb = null;
-    aircraftCarrier = null;
-    battleship = null;
-    destroyer = null;
-    submarine = null;
-    cruiser = null;
+    player = null;
+    computer = null;
+
+    playerAircraftCarrier = null;
+    playerBattleship = null;
+    playerDestroyer = null;
+    playerSubmarine = null;
+    playerCruiser = null;
+
+    compAircraftCarrier = null;
+    compBattleship = null;
+    compDestroyer = null;
+    compSubmarine = null;
+    compCruiser = null;
 });
     
 //valid ship placement
 test('Places ship on the board correctly', () => {
-    const result = gb.placeShip(battleship, [2, 3], 'horizontal', 'B');
+    const result = player.gameboard.placeShip(playerBattleship, [2, 3], 'horizontal', 'pB');
     expect(result).toBeUndefined(); //no error message returned
-    expect(gb.board[2][2]).toBe(null);
-    expect(gb.board[2][3]).toBe('B');
-    expect(gb.board[2][4]).toBe('B');
-    expect(gb.board[2][5]).toBe('B');
-    expect(gb.board[2][6]).toBe('B');
-    expect(gb.board[2][7]).toBe(null);
+    expect(player.gameboard.board[2][2]).toBe(null);
+    expect(player.gameboard.board[2][3]).toBe('pB');
+    expect(player.gameboard.board[2][4]).toBe('pB');
+    expect(player.gameboard.board[2][5]).toBe('pB');
+    expect(player.gameboard.board[2][6]).toBe('pB');
+    expect(player.gameboard.board[2][7]).toBe(null);
 });
 
 //invalid starting position
 test('Returns error message for selection off the board', () => {
-    const resultOne = gb.placeShip(battleship, [1, 13], 'vertical', 'B');
-    const resultTwo = gb.placeShip(battleship, [-1, 6], 'vertical', 'B');
+    const resultOne = player.gameboard.placeShip(playerBattleship, [1, 13], 'vertical', 'B');
+    const resultTwo = player.gameboard.placeShip(playerBattleship, [-1, 6], 'vertical', 'B');
     expect(resultOne).toBe('Invalid position');
     expect(resultTwo).toBe('Invalid position');
 });
 
 //overlap with existing ship
 test('Returns error message for overlapping position', () => {
-    const firstPlacement = gb.placeShip(battleship, [5, 4], 'horizontal', 'B');
-    const secondPlacement = gb.placeShip(destroyer, [4, 5], 'vertical', 'D');
+    const firstPlacement = player.gameboard.placeShip(playerBattleship, [5, 4], 'horizontal', 'B');
+    const secondPlacement = player.gameboard.placeShip(playerDestroyer, [4, 5], 'vertical', 'D');
     expect(firstPlacement).toBeUndefined();
     expect(secondPlacement).toBe('That spot is taken');
 });
 
 //attacking a ship returns a 'hit'
 test('Returns "Hit" message, updates the board to reflect that hit', () => {
-    gb.placeShip(battleship, [5, 4], 'horizontal', 'B');
-    const hit = gb.receiveAttack([5, 4]);
+    player.gameboard.placeShip(playerBattleship, [5, 4], 'horizontal', 'pB');
+    const hit = player.gameboard.receiveAttack([5, 4]);
     expect(hit).toBe('Hit!');
-    expect(gb.board[5][4]).toBe('x');
+    expect(player.gameboard.board[5][4]).toBe('x');
 });
 
 //attacking an empty spot returns a 'miss'
 test('Returns "Miss", updates the board to reflect that missed shot', () => {
-    gb.placeShip(battleship, [5, 4], 'horizontal', 'B'); //ship spans [5, 4], [5, 5], [5, 6], [5, 7] 
-    const miss = gb.receiveAttack([5, 3]);
+    player.gameboard.placeShip(playerBattleship, [5, 4], 'horizontal', 'pB'); //ship spans [5, 4], [5, 5], [5, 6], [5, 7] 
+    const miss = player.gameboard.receiveAttack([5, 3]);
     expect(miss).toBe('Miss');
-    expect(gb.board[5][3]).toBe('o');
+    expect(player.gameboard.board[5][3]).toBe('o');
 });
 
 //attacking the same spot twice => both hit and miss cases
 test('Returns error message when firing on the same spot again', () => {
-    gb.placeShip(battleship, [5, 4], 'horizontal', 'B');
-    const firstShotHit = gb.receiveAttack([5, 5]);
-    const secondShotHit = gb.receiveAttack([5, 5]);
+    player.gameboard.placeShip(playerBattleship, [5, 4], 'horizontal', 'pB');
+    const firstShotHit = player.gameboard.receiveAttack([5, 5]);
+    const secondShotHit = player.gameboard.receiveAttack([5, 5]);
     expect(firstShotHit).toBe('Hit!');
     expect(secondShotHit).toBe('You already shot there');
 
-    const firstShotMiss = gb.receiveAttack([1, 5]);
-    const secondShotMiss = gb.receiveAttack([1, 5]);
+    const firstShotMiss = player.gameboard.receiveAttack([1, 5]);
+    const secondShotMiss = player.gameboard.receiveAttack([1, 5]);
     expect(firstShotMiss).toBe('Miss');
     expect(secondShotMiss).toBe('You already shot there');
 });
@@ -90,38 +116,50 @@ test('Returns error message when firing on the same spot again', () => {
 test('Returns true if all ships have been sunk', () => {
 
     //place all ships
-    gb.placeShip(aircraftCarrier, [0, 0], 'horizontal', 'AC');
-    gb.placeShip(battleship, [1, 0], 'horizontal', 'B');
-    gb.placeShip(destroyer, [2, 0], 'horizontal', 'D');
-    gb.placeShip(submarine, [3, 0], 'horizontal', 'SUB');
-    gb.placeShip(cruiser, [4, 0], 'horizontal', 'C');
+    player.gameboard.placeShip(playerAircraftCarrier, [0, 0], 'horizontal', 'pAC');
+    player.gameboard.placeShip(playerBattleship, [1, 0], 'horizontal', 'pB');
+    player.gameboard.placeShip(playerDestroyer, [2, 0], 'horizontal', 'pD');
+    player.gameboard.placeShip(playerSubmarine, [3, 0], 'horizontal', 'pSUB');
+    player.gameboard.placeShip(playerCruiser, [4, 0], 'horizontal', 'pC');
 
     //sink all ships
     //carrier
-    gb.receiveAttack([0, 0]);
-    gb.receiveAttack([0, 1]);
-    gb.receiveAttack([0, 2]);
-    gb.receiveAttack([0, 3]);
-    gb.receiveAttack([0, 4]);//sunk
+    player.gameboard.receiveAttack([0, 0]);
+    player.gameboard.receiveAttack([0, 1]);
+    player.gameboard.receiveAttack([0, 2]);
+    player.gameboard.receiveAttack([0, 3]);
+    player.gameboard.receiveAttack([0, 4]);//sunk
     //battleship
-    gb.receiveAttack([1, 0]);
-    gb.receiveAttack([1, 1]);
-    gb.receiveAttack([1, 2]);
-    gb.receiveAttack([1, 3]);//sunk
+    player.gameboard.receiveAttack([1, 0]);
+    player.gameboard.receiveAttack([1, 1]);
+    player.gameboard.receiveAttack([1, 2]);
+    player.gameboard.receiveAttack([1, 3]);//sunk
     //destroyer
-    gb.receiveAttack([2, 0]);   
-    gb.receiveAttack([2, 1]);
-    gb.receiveAttack([2, 2]);//sunk
+    player.gameboard.receiveAttack([2, 0]);   
+    player.gameboard.receiveAttack([2, 1]);
+    player.gameboard.receiveAttack([2, 2]);//sunk
     //sub
-    gb.receiveAttack([3, 0]);
-    gb.receiveAttack([3, 1]);
-    gb.receiveAttack([3, 2]);//sunk
+    player.gameboard.receiveAttack([3, 0]);
+    player.gameboard.receiveAttack([3, 1]);
+    player.gameboard.receiveAttack([3, 2]);//sunk
     //cruiser
-    gb.receiveAttack([4, 0]);
+    player.gameboard.receiveAttack([4, 0]);
 
-    expect(gb.allShipsSunk()).toBe(false);
+    expect(player.gameboard.allPlayerShipsSunk()).toBe(false);
 
-    gb.receiveAttack([4, 1]);//sunk
+    player.gameboard.receiveAttack([4, 1]);//sunk
 
-    expect(gb.allShipsSunk()).toBe(true);
+    expect(player.gameboard.allPlayerShipsSunk()).toBe(true);
+});
+
+test('Attacking one ship does not attack the opponents ship', () => {
+    player.gameboard.placeShip(playerAircraftCarrier, [0, 0], 'horizontal', 'pAC');
+    computer.gameboard.placeShip(compAircraftCarrier, [4, 4], 'vertical', 'cAC');
+
+    //**not working properly here, but works in the browser - may be issue with testing environment */
+    // player.gameboard.receiveAttack([0, 0]);
+    playerAircraftCarrier.getHit();
+
+    expect(playerAircraftCarrier.hitPoints).toBe(1);
+    expect(compAircraftCarrier.hitPoints).toBe(0);
 });

@@ -36,7 +36,7 @@ export function handleAttack(player, opponent, coordinates, gameFinished) {
     gameFinished = false;
 
     //check gameover
-    if (opponent.gameboard.allShipsSunk()) {
+    if (opponent.gameboard.allPlayerShipsSunk() || opponent.gameboard.allCompShipsSunk()) {
         console.log(`${player.name}`, player.gameboard);
         console.log(`${opponent.name}`, opponent.gameboard);
         gameOver(player);

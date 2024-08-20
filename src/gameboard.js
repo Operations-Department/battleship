@@ -1,11 +1,18 @@
 const Ship = require('./ship');
 
 //instantiate all valid ships for the game
-const aircraftCarrier = new Ship('Aircraft Carrier', 5);
-const battleship = new Ship('Battleship', 4);
-const destroyer = new Ship('Destroyer', 3);
-const submarine = new Ship('Submarine', 3)
-const cruiser = new Ship('Cruiser', 2);
+const playerAircraftCarrier = new Ship('Aircraft Carrier', 5);
+const playerBattleship = new Ship('Battleship', 4);
+const playerDestroyer = new Ship('Destroyer', 3);
+const playerSubmarine = new Ship('Submarine', 3)
+const playerCruiser = new Ship('Cruiser', 2);
+
+const compAircraftCarrier = new Ship('Aircraft Carrier', 5);
+const compBattleship = new Ship('Battleship', 4);
+const compDestroyer = new Ship('Destroyer', 3);
+const compSubmarine = new Ship('Submarine', 3)
+const compCruiser = new Ship('Cruiser', 2);
+
 
 class Gameboard {
     constructor() {
@@ -20,12 +27,20 @@ class Gameboard {
         this.hits = [];                 //stores all coordinates that were hit
         this.misses = [];               //stores all coordinates that were misses
         
-        this.shipsObject = {
-            'AC': aircraftCarrier,
-            'B': battleship,
-            'D': destroyer,
-            'SUB': submarine,
-            'C': cruiser
+        this.playerShipsObject = {
+            'pAC': playerAircraftCarrier,
+            'pB': playerBattleship,
+            'pD': playerDestroyer,
+            'pSUB': playerSubmarine,
+            'pC': playerCruiser
+        }
+
+        this.compShipsObject = {
+            'cAC': compAircraftCarrier,
+            'cB': compBattleship,
+            'cD': compDestroyer,
+            'cSUB': compSubmarine,
+            'cC': compCruiser
         }
     }
 
@@ -128,14 +143,19 @@ class Gameboard {
         //attack hit - show on board and send damage to ship class
         } else {
             this.hits.push([x, y]);
-            if (this.shipsObject[location]) this.shipsObject[location].getHit();
+            if (this.playerShipsObject[location]) this.playerShipsObject[location].getHit();
+            else if (this.compShipsObject[location]) this.compShipsObject[location].getHit();
             this.board[x][y] = 'x';
             return 'Hit!';
         }
     }
 
-    allShipsSunk() {
-        return Object.values(this.shipsObject).every(ship => ship && ship.isSunk);
+    allPlayerShipsSunk() {
+        return Object.values(this.playerShipsObject).every(ship => ship && ship.isSunk);
+    }
+
+    allCompShipsSunk() {
+        return Object.values(this.compShipsObject).every(ship => ship && ship.isSunk);
     }
 }
 
