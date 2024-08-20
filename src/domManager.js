@@ -27,8 +27,7 @@ export function handleAttack(player, opponent, coordinates, gameFinished) {
     //send attack to gameboard/ship objects
     const result = opponent.gameboard.receiveAttack(coordinates);
     
-    console.log(`${opponent.name}`);
-    console.table(opponent.gameboard.board);
+    // console.table(opponent.gameboard.board);
     // console.log(result);
 
     //update ui to reflect changes

@@ -1,20 +1,63 @@
 const Ship = require('../ship');
 
-const ship = new Ship('Battleship', 4);
+let playerShip;
+let computerShip;
 
-test('Ship has correct length', () => {
-    expect(ship.length).toBe(4);
+beforeEach(() => {
+    playerShip = new Ship('Battleship', 4);
+    computerShip = new Ship('Battleship', 4);
 });
 
-test('Ship can get hit', () => {
-    ship.getHit();
-    expect(ship.hitPoints).toBe(1);
+afterEach(() => {
+    playerShip = null;
+    computerShip = null;
 });
 
-test('Ship can sink', () => {
-    ship.getHit();
-    ship.getHit();
-    ship.getHit();
-    ship.getHit();
-    expect(ship.isSunk).toBe(true);
+test('Ships have correct length', () => {
+    expect(playerShip.length).toBe(4);
+    expect(computerShip.length).toBe(4);
+});
+
+test('Ships can get hit', () => {
+    expect(playerShip.hitPoints).toBe(0);
+    expect(computerShip.hitPoints).toBe(0);
+
+    playerShip.getHit();
+    computerShip.getHit();
+
+    expect(playerShip.hitPoints).toBe(1);
+    expect(computerShip.hitPoints).toBe(1);
+});
+
+test('Hitting one battleship does not hit the other', () => {
+    playerShip.getHit();
+
+    expect(playerShip.hitPoints).toBe(1);
+    expect(computerShip.hitPoints).toBe(0);
+
+    computerShip.getHit();
+
+    expect(playerShip.hitPoints).toBe(1);
+    expect(computerShip.hitPoints).toBe(1);
+});
+
+test('Ships can sink', () => {
+    expect(playerShip.isSunk).toBe(false);
+    expect(computerShip.isSunk).toBe(false);
+
+    playerShip.getHit();
+    playerShip.getHit();
+    playerShip.getHit();
+    playerShip.getHit();
+
+    expect(playerShip.isSunk).toBe(true);
+    expect(computerShip.isSunk).toBe(false);
+
+    computerShip.getHit();
+    computerShip.getHit();
+    computerShip.getHit();
+    computerShip.getHit();
+
+    expect(playerShip.isSunk).toBe(true);
+    expect(computerShip.isSunk).toBe(true);
 });

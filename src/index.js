@@ -1,33 +1,37 @@
 const Ship = require('./ship');
-const Gameboard= require('./gameboard');
+const Gameboard = require('./gameboard');
 const Player = require('./player');
 import { setupBoardUI, handleAttack } from './domManager';
 
-//instantiate ships
-const aircraftCarrier = new Ship('Aircraft Carrier', 5);
-const battleship = new Ship('Battleship', 4);
-const destroyer = new Ship('Destroyer', 3);
-const submarine = new Ship('Submarine', 3)
-const cruiser = new Ship('Cruiser', 2);
+//instantiate player's ships
+const playerAircraftCarrier = new Ship('Aircraft Carrier', 5);
+const playerBattleship = new Ship('Battleship', 4);
+const playerDestroyer = new Ship('Destroyer', 3);
+const playerSubmarine = new Ship('Submarine', 3)
+const playerCruiser = new Ship('Cruiser', 2);
+
+//instantiate computer's ships
+const compAircraftCarrier = new Ship('Aircraft Carrier', 5);
+const compBattleship = new Ship('Battleship', 4);
+const compDestroyer = new Ship('Destroyer', 3);
+const compSubmarine = new Ship('Submarine', 3)
+const compCruiser = new Ship('Cruiser', 2);
 
 //setup players
-const player = new Player('Chris', 'player');
+const player = new Player('Player', 'player');
 const computer = new Player('Computer', 'computer');
 
-const playerBoard = player.gameboard;
-const computerBoard = computer.gameboard;
+player.gameboard.placeShip(playerAircraftCarrier, [0, 0], 'vertical', 'AC');
+player.gameboard.placeShip(playerBattleship, [6, 2], 'horizontal', 'B');
+player.gameboard.placeShip(playerDestroyer, [6, 6], 'vertical', 'D');
+player.gameboard.placeShip(playerSubmarine, [5, 5], 'horizontal', 'SUB');
+player.gameboard.placeShip(playerCruiser, [8, 9], 'vertical', 'C');
 
-playerBoard.placeShip(aircraftCarrier, [0, 0], 'vertical', 'AC');
-playerBoard.placeShip(battleship, [6, 2], 'horizontal', 'B');
-playerBoard.placeShip(destroyer, [6, 6], 'vertical', 'D');
-playerBoard.placeShip(submarine, [5, 5], 'horizontal', 'SUB');
-playerBoard.placeShip(cruiser, [8, 9], 'vertical', 'C');
-
-computerBoard.placeShip(aircraftCarrier, [4, 3], 'vertical', 'AC');
-computerBoard.placeShip(battleship, [3, 2], 'horizontal', 'B');
-computerBoard.placeShip(destroyer, [3, 6], 'vertical', 'D');
-computerBoard.placeShip(submarine, [8, 4], 'horizontal', 'SUB');
-computerBoard.placeShip(cruiser, [6, 6], 'vertical', 'C');
+computer.gameboard.placeShip(compAircraftCarrier, [4, 3], 'vertical', 'AC');
+computer.gameboard.placeShip(compBattleship, [3, 2], 'horizontal', 'B');
+computer.gameboard.placeShip(compDestroyer, [3, 6], 'vertical', 'D');
+computer.gameboard.placeShip(compSubmarine, [8, 4], 'horizontal', 'SUB');
+computer.gameboard.placeShip(compCruiser, [6, 6], 'vertical', 'C');
 
 setupBoardUI('player');
 setupBoardUI('computer');
@@ -42,13 +46,18 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
     };
     const coordinates = getCoordinates(e);  
     let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
+
+    console.table(computer.gameboard.board);
+    console.log('computer ships', computer.gameboard.shipsObject);
+    console.log('player ships', player.gameboard.shipsObject);
+
     playersTurn = false;
     computerAttack(gameFinished);
 });
 
 //computer attacks random spot
 function computerAttack(gameFinished) {
-    if (playersTurn | gameFinished) return;
+    if (playersTurn || gameFinished) return;
     
     const coordinates = generateRandomCoordinates();
     handleAttack(computer, player, coordinates, gameFinished);
