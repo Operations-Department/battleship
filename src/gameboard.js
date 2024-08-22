@@ -126,6 +126,38 @@ class Gameboard {
         this.desiredCoordinates = []; //clear array for next round
     }
 
+    //set the comp ship positions randomly each playthrough
+    placeRandomShip(ship, marker) {
+        let isValidPlacement = false;
+    
+        while (!isValidPlacement) {
+            //generate random start coordinates
+            const x = Math.floor(Math.random() * 10);
+            const y = Math.floor(Math.random() * 10);
+    
+            //set ship as horizontal or vertical
+            const orientation = this.getRandomShipOrientation();
+    
+            //avoid going overboard
+            if (this.avoidOverBoard(x, y, orientation, ship)) {
+                this.setDesiredCoordinates(x, y, ship, orientation);
+    
+                //avoid occupied position
+                if (!this.occupiedSpotCheck()) {
+                    //place ship and mark valid
+                    this.placeShip(ship, [x, y], orientation, marker);
+                    isValidPlacement = true;
+                }
+            }
+        }
+    }
+    
+    getRandomShipOrientation() {
+        let orientation = Math.floor(Math.random() * 10) % 2;
+        if (orientation === 0) return'horizontal';
+        else return 'vertical';
+    }
+
     //check if selected spot has already been shot
     //*helper function to receiveAttack method*
     firedCheck(x, y) {

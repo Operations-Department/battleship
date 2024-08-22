@@ -27,11 +27,11 @@ player.gameboard.placeShip(playerDestroyer, [6, 6], 'vertical', 'pD');
 player.gameboard.placeShip(playerSubmarine, [5, 5], 'horizontal', 'pSUB');
 player.gameboard.placeShip(playerCruiser, [8, 9], 'vertical', 'pC');
 
-computer.gameboard.placeShip(compAircraftCarrier, [4, 3], 'vertical', 'cAC');
-computer.gameboard.placeShip(compBattleship, [3, 2], 'horizontal', 'cB');
-computer.gameboard.placeShip(compDestroyer, [3, 6], 'vertical', 'cD');
-computer.gameboard.placeShip(compSubmarine, [8, 4], 'horizontal', 'cSUB');
-computer.gameboard.placeShip(compCruiser, [6, 6], 'vertical', 'cC');
+computer.gameboard.placeRandomShip(compAircraftCarrier, 'cAC');
+computer.gameboard.placeRandomShip(compBattleship, 'cB');
+computer.gameboard.placeRandomShip(compDestroyer, 'cD');
+computer.gameboard.placeRandomShip(compSubmarine, 'cSUB');
+computer.gameboard.placeRandomShip(compCruiser, 'cC');
 
 setupBoardUI('player');
 setupBoardUI('computer');
@@ -50,7 +50,7 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
         let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
         playersTurn = false;
         computerAttack(gameFinished);    
-        // console.table(computer.gameboard.board);
+        console.table(computer.gameboard.board);
         // console.log('computer ships', computer.gameboard.compShipsObject);
     }, 0);
 });
@@ -59,7 +59,12 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
 function computerAttack(gameFinished) {
     if (playersTurn || gameFinished) return;
 
-    const coordinates = generateAttackCoordinates();
+    let coordinates;
+
+    //if ship already hit - attack the rest
+    if (directAttacksQ.length) coordinates = directAttacksQ.shift();
+    //else attack a random spot
+    else coordinates = generateRandomCoordinates();
 
     setTimeout(() => {
         handleAttack(computer, player, coordinates, gameFinished);
@@ -87,18 +92,15 @@ for (let i = 0; i <= 99; i++ ) {
 };
 
 //select random index from randomAttacksQ - avoids picking the same one twice
-function generateAttackCoordinates() {
+function generateRandomCoordinates() {
 
-    //ship already hit - attack the rest
-    if (directAttacksQ.length) return directAttacksQ.shift();
-
-    //no ship found - attack at random
+    //generate random coordinates
     let randomIndex = Math.floor(Math.random() * randomAttacksQ.length);
     let number = randomAttacksQ.splice(randomIndex, 1)[0];
     let coordinates = number.toString().split('').map(Number);
     if (coordinates.length === 1) coordinates.unshift(0);
     
-    //if shot is a hit, prepare for further attack!
+    //if shot is a hit, load up attack queue for further bombardment!
     confirmHit(coordinates);
 
     return coordinates;

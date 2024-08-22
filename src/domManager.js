@@ -75,10 +75,16 @@ function gameOver(player) {
 
     //game over text
     const title = document.createElement('h1');
-    title.textContent = 'Game Over';
 
     const subTitle = document.createElement('h2');
-    subTitle.textContent = `${player.name} wins!`;
+
+    if (player.type === 'player') {
+        title.textContent = 'Congratulations!';
+        subTitle.textContent = 'You Win';
+    } else {
+        title.textContent = 'Game Over!';
+        subTitle.textContent = 'You Lose';
+    }
 
     overlay.appendChild(title);
     overlay.appendChild(subTitle);
