@@ -28,7 +28,7 @@ export function handleAttack(player, opponent, coordinates, gameFinished) {
     const result = opponent.gameboard.receiveAttack(coordinates);
     
     // console.table(opponent.gameboard.board);
-    // console.log(result);
+    // console.log(player, result);
 
     //update ui to reflect changes
     updateUI(opponent.type, result, coordinates);
@@ -37,8 +37,8 @@ export function handleAttack(player, opponent, coordinates, gameFinished) {
 
     //check gameover
     if (opponent.gameboard.allPlayerShipsSunk() || opponent.gameboard.allCompShipsSunk()) {
-        console.log(`${player.name}`, player.gameboard);
-        console.log(`${opponent.name}`, opponent.gameboard);
+        // console.log(`${player.name}`, player.gameboard);
+        // console.log(`${opponent.name}`, opponent.gameboard);
         gameOver(player);
         gameFinished = true;
     }

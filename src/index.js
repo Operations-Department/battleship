@@ -49,11 +49,10 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
     setTimeout(() => {
         let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
         playersTurn = false;
-        computerAttack(gameFinished);
+        computerAttack(gameFinished);    
+        // console.table(computer.gameboard.board);
+        // console.log('computer ships', computer.gameboard.compShipsObject);
     }, 0);
-
-    // console.table(computer.gameboard.board);
-    // console.log('computer ships', computer.gameboard.compShipsObject);
 });
 
 //computer attacks random spot
@@ -65,9 +64,12 @@ function computerAttack(gameFinished) {
     setTimeout(() => {
         handleAttack(computer, player, coordinates, gameFinished);
         playersTurn = true;
-    }, 0);
 
-    // console.table(player.gameboard.board);
+        // console.table(player.gameboard.board);
+        // console.log('Coordinate is: ', coordinates);
+        // console.log('Direct attack queue', directAttacksQ);
+        // console.log(randomAttacksQ);
+    }, 0);
 }
 
 //get coordinates when computer board cell clicked
@@ -87,26 +89,22 @@ for (let i = 0; i <= 99; i++ ) {
 //select random index from randomAttacksQ - avoids picking the same one twice
 function generateAttackCoordinates() {
 
+    //ship already hit - attack the rest
+    if (directAttacksQ.length) return directAttacksQ.shift();
+
+    //no ship found - attack at random
     let randomIndex = Math.floor(Math.random() * randomAttacksQ.length);
-
     let number = randomAttacksQ.splice(randomIndex, 1)[0];
-
     let coordinates = number.toString().split('').map(Number);
-
     if (coordinates.length === 1) coordinates.unshift(0);
-
-    console.log('Coordinate is: ', coordinates);
-    console.log('Direct attack queue', directAttackQ);
     
-    //ship found - attack another piece
-    if (directAttackQ.length) return directAttackQ.shift();
-    else {
-        confirmHit(coordinates);
-        return coordinates;
-    };
+    //if shot is a hit, prepare for further attack!
+    confirmHit(coordinates);
+
+    return coordinates;
 }
 
-let directAttackQ = [];
+let directAttacksQ = [];
 
 let allPlayerPositions = [
     [player.gameboard.playerACLocation], 
@@ -135,16 +133,24 @@ function confirmHit(targetedCoords) {
 
                 let current = part.join('');
                 if (targetedCoords === current) {
-                    directAttackQ = allPlayerPositions[i][j];
+                    //add player positions to the 'to-attack queue'
+                    directAttacksQ = [...allPlayerPositions[i][j]];
+                    //remove position that was already attack - avoid bug
+                    directAttacksQ = directAttacksQ.filter(coord => coord.join('') !== targetedCoords);
+                    adjustRandomAttacksArray();
                     return;
-                };
-            });
+                }
+            })
         }
     }
 }
 
-//removes directAttack coordinates from randomAttackQ - avoid comp from attempting the same spot twice 
+//removes directAttack coordinates from randomAttacksQ - avoid comp from attempting the same spot twice 
 function adjustRandomAttacksArray() {
 
-    //avoid attempting an attack on the same spot
+    //compare directAttacksQ with randomAttacksQ
+    //remove duplicates
+    let num = directAttacksQ.map(array => array.join('')).map((index) => Number(index));
+
+    randomAttacksQ = randomAttacksQ.filter(index => !num.includes(index));
 }
