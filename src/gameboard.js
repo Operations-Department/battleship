@@ -26,6 +26,13 @@ class Gameboard {
         this.firedUpon = [];            //stores all coordinates that have been fired upon already
         this.hits = [];                 //stores all coordinates that were hit
         this.misses = [];               //stores all coordinates that were misses
+
+        this.playerACLocation = [];
+        this.playerBLocation = [];
+        this.playerDLocation = [];
+        this.playerSUBLocation = [];
+        this.playerCLocation = [];
+
         
         this.playerShipsObject = {
             'pAC': playerAircraftCarrier,
@@ -107,6 +114,13 @@ class Gameboard {
             const [row, col] = this.desiredCoordinates[i]; 
             this.board[row][col] = marker;
             this.occupiedCoordinates.push([row, col]); //update occupied coordinates
+
+            //add player coordinates to array - used for smarter computer attack ai
+            if (marker === 'pAC') this.playerACLocation.push([row, col]);
+            if (marker === 'pB') this.playerBLocation.push([row, col]);
+            if (marker === 'pD') this.playerDLocation.push([row, col]);
+            if (marker === 'pSUB') this.playerSUBLocation.push([row, col]);
+            if (marker === 'pC') this.playerCLocation.push([row, col]);
         }
 
         this.desiredCoordinates = []; //clear array for next round

@@ -44,26 +44,30 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
         computerAttack();
         return;
     };
-    const coordinates = getCoordinates(e);  
-    let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
+    const coordinates = getCoordinates(e);
 
-    console.table(computer.gameboard.board);
-    console.log('computer ships', computer.gameboard.compShipsObject);
+    setTimeout(() => {
+        let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
+        playersTurn = false;
+        computerAttack(gameFinished);
+    }, 0);
 
-    playersTurn = false;
-    computerAttack(gameFinished);
+    // console.table(computer.gameboard.board);
+    // console.log('computer ships', computer.gameboard.compShipsObject);
 });
 
 //computer attacks random spot
 function computerAttack(gameFinished) {
-    if (playersTurn || gameFinished) return;    
-    const coordinates = generateRandomCoordinates();
-    handleAttack(computer, player, coordinates, gameFinished);
+    if (playersTurn || gameFinished) return;
 
-    console.table(player.gameboard.board);
-    console.log('player ships', player.gameboard.playerShipsObject);
+    const coordinates = generateAttackCoordinates();
 
-    playersTurn = true;
+    setTimeout(() => {
+        handleAttack(computer, player, coordinates, gameFinished);
+        playersTurn = true;
+    }, 0);
+
+    // console.table(player.gameboard.board);
 }
 
 //get coordinates when computer board cell clicked
@@ -75,20 +79,72 @@ function getCoordinates(e) {
 }
 
 //store for computer attack
-let array = [];
+let randomAttacksQ = [];
 for (let i = 0; i <= 99; i++ ) {
-    array.push(i);
+    randomAttacksQ.push(i);
 };
 
-//select random index from array - avoids picking the same one twice
-function generateRandomCoordinates() {
-    let randomIndex = Math.floor(Math.random() * array.length);
+//select random index from randomAttacksQ - avoids picking the same one twice
+function generateAttackCoordinates() {
 
-    let number = array.splice(randomIndex, 1)[0];
+    let randomIndex = Math.floor(Math.random() * randomAttacksQ.length);
+
+    let number = randomAttacksQ.splice(randomIndex, 1)[0];
 
     let coordinates = number.toString().split('').map(Number);
 
     if (coordinates.length === 1) coordinates.unshift(0);
 
-    return coordinates;
+    console.log('Coordinate is: ', coordinates);
+    console.log('Direct attack queue', directAttackQ);
+    
+    //ship found - attack another piece
+    if (directAttackQ.length) return directAttackQ.shift();
+    else {
+        confirmHit(coordinates);
+        return coordinates;
+    };
+}
+
+let directAttackQ = [];
+
+let allPlayerPositions = [
+    [player.gameboard.playerACLocation], 
+    [player.gameboard.playerBLocation], 
+    [player.gameboard.playerDLocation], 
+    [player.gameboard.playerSUBLocation],
+    [player.gameboard.playerCLocation]
+];
+
+//when comp gets a 'hit' add rest of player's ship to attack queue
+//after ship is sunk, back to random attacks
+function confirmHit(targetedCoords) {
+
+    targetedCoords = targetedCoords.join('');
+
+    //compare the generated targetedCoords with players chosen coords to determine if it will be a hit
+    //if a hit then will start honing in on that ship
+    //go into the first array - all player ships
+    for (let i = 0; i < allPlayerPositions.length; i++) {
+
+        //go into the second array - a ship
+        for (let j = 0; j < allPlayerPositions[i].length; j++) {
+
+            //go into the third array - ships coordinates
+            allPlayerPositions[i][j].forEach(part => {
+
+                let current = part.join('');
+                if (targetedCoords === current) {
+                    directAttackQ = allPlayerPositions[i][j];
+                    return;
+                };
+            });
+        }
+    }
+}
+
+//removes directAttack coordinates from randomAttackQ - avoid comp from attempting the same spot twice 
+function adjustRandomAttacksArray() {
+
+    //avoid attempting an attack on the same spot
 }
