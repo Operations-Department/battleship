@@ -1,3 +1,8 @@
+import { getCoordinates } from "./index";
+
+let occupiedCoords = [];    
+let desiredCoords = [];
+
 //setup player and comp board ui
 export function setupBoardUI(boardID) {
     const board = document.getElementById(`${boardID}-board`);
@@ -109,10 +114,114 @@ export function setupPlaceShipsUI() {
     confirmationDiv.appendChild(confirm);
 }
 
+//ui visualization of where ship will go on playerside board
+export function handleHover(e, ship, orientation) {
+    let [x, y] = getCoordinates(e);
+    const length = ship.length;
+    x = Number(x);
+    y = Number(y);
+
+    let invalidShipPlacement = false;
+
+    //if we have a would-be overboard placement
+    if (
+        (orientation === 'vertical' && x + length > 10) || 
+        (orientation === 'horizontal' && y + length > 10)
+    ) invalidShipPlacement = true;
+
+    //highlight where the ship will go after placement
+    if (orientation === 'vertical') {
+        for (let i = 0; i < length; i++) {
+            const cell = document.querySelector(`#board .cell[data-x="${x + i}"][data-y="${y}"]`);
+            
+            if (cell && !invalidShipPlacement) {
+                cell.classList.add('hoverHighlight');
+                cell. classList.remove ('overboard');
+                desiredCoords.push([x + i, y]);
+                
+                let overlap = compareDesiredOccupiedCoords();
+                if (overlap) {
+                    cell.classList.remove('hoverHighlight');
+                    cell. classList.add ('overboard');
+                    return invalidShipPlacement = true;
+                }
+            }
+            if (cell && invalidShipPlacement) {
+                cell.classList.remove('hoverHighlight');
+                cell. classList.add ('overboard');
+            } 
+        }
+    } else if (orientation === 'horizontal') {
+        for (let j = 0; j < length; j++) {
+            const cell = document.querySelector(`#board .cell[data-x="${x}"][data-y="${y + j}"]`);
+            
+            if (cell && !invalidShipPlacement) {
+                cell.classList.add('hoverHighlight');
+                cell. classList.remove ('overboard');
+                desiredCoords.push([x, y + j]);
+                
+                let overlap = compareDesiredOccupiedCoords();
+                if (overlap) {
+                    cell.classList.remove('hoverHighlight');
+                    cell. classList.add ('overboard');
+                    return invalidShipPlacement = true;
+                }
+            }
+            if (cell && invalidShipPlacement) {
+                cell.classList.remove('hoverHighlight');
+                cell. classList.add ('overboard');
+            } 
+        }
+    }
+
+    return invalidShipPlacement;
+};
+
+function compareDesiredOccupiedCoords() {
+    let newDesired = desiredCoords.map(index => index.join(''));
+    let newOccupied = occupiedCoords.map(index => index.join(''));
+
+    return newDesired.some(element => newOccupied.includes(element));
+}
+
+//show selected position as highlighted on the board permanently
+export function showSelected(coordinates, ship, orientation) {
+    let [x, y] = coordinates;
+    const length = ship.length;
+    x = Number(x);
+    y = Number(y);
+
+    if (orientation === 'vertical') {
+        for (let i = 0; i < length; i++) {
+            const cell = document.querySelector(`#board .cell[data-x="${x + i}"][data-y="${y}"]`);
+            if (cell) {
+                occupiedCoords.push([x + i, y]);
+                cell.classList.add('selectedHighlight');
+            }
+        }
+    } else if (orientation === 'horizontal') {
+        for (let j = 0; j < length; j++) {
+            const cell = document.querySelector(`#board .cell[data-x="${x}"][data-y="${y + j}"]`);
+            if (cell) {
+                occupiedCoords.push([x, y + j]);
+                cell.classList.add('selectedHighlight');
+            }
+        }
+    }
+}
+
 //disables player from placing one ship in multiple spots
 export function disableButton(button, board) {
     button.classList.add('forbiddenButton');
     board.classList.add('forbiddenButton');
+}
+
+export function resetOccupiedCoordsArray() {
+    occupiedCoords = [];
+}
+
+export function resetDesiredCoordsArray() {
+    desiredCoords = [];
 }
 
 export function resetButtons(buttonDiv) {

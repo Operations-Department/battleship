@@ -4,7 +4,9 @@ const Player = require('./player');
 import { 
     setupBoardUI, setupPlaceShipsUI, 
     disableButton, changeCSS, 
-    handleAttack, resetButtons
+    handleAttack, resetButtons,
+    handleHover, showSelected,
+    resetOccupiedCoordsArray, resetDesiredCoordsArray
 } from './domManager';
 
 //instantiate player's ships
@@ -48,6 +50,7 @@ setupBoardUI('computer');
 //instantiate variables for player ship placement ui
 const placementBoard = document.getElementById('board');
 const buttonDiv = document.getElementById('buttonDiv');
+const cells = document.querySelectorAll('#board .cell');
 
 //this array will store the players ships placement details
 let playerChoice = [];
@@ -61,12 +64,29 @@ const destroyer = document.getElementById('destroyer');
 const submarine = document.getElementById('submarine');
 const cruiser = document.getElementById('cruiser');
 
+//ui visual for player ship placement
+placementBoard.addEventListener('mouseover', (e) => {
+    handleHover(e, playerShip, playerOrientation);
+});
+
+placementBoard.addEventListener('mouseout', (e) => {
+    cells.forEach(cell => {
+        cell.classList.remove('hoverHighlight');
+        cell.classList.remove('overboard');
+    });
+    resetDesiredCoordsArray();
+});
+
 //player ship coordinate selection
 placementBoard.addEventListener('click', (e) => {
     const coordinates = getCoordinates(e);
-    playerChoice.push([coordinates, playerOrientation, playerShip]);
-    console.log(playerChoice);
-    monitorPlayerChoiceArray(playerChoice, placementBoard);
+    let invalidShip = handleHover(e, playerShip, playerOrientation);
+    if (!invalidShip) {
+        playerChoice.push([coordinates, playerOrientation, playerShip]);
+        // console.log(playerChoice);
+        monitorPlayerChoiceArray(playerChoice, placementBoard);
+        showSelected(coordinates, playerShip, playerOrientation);
+    }
 });
 
 //player ship selection
@@ -135,13 +155,17 @@ document.addEventListener('DOMContentLoaded', () => {
     carrier.click();
 });
 
-//reset the board and clear the playerchoice array
+//resets the board completely
 document.getElementById('reset').addEventListener('click', () => {
     playerChoice = [];
     changeCSS(placementBoard);
     resetButtons(buttonDiv);
+    cells.forEach(cell => {
+        cell.classList.remove('selectedHighlight');
+    });
+    resetOccupiedCoordsArray();
     carrier.click();
-    console.log(playerChoice);
+    // console.log(playerChoice);
 });
 
 // player to start the game
@@ -186,7 +210,7 @@ function computerAttack(gameFinished) {
 }
 
 //get coordinates when computer board cell clicked
-function getCoordinates(e) {
+export function getCoordinates(e) {
     const x = e.target.dataset.x;
     const y = e.target.dataset.y;
 
