@@ -80,7 +80,7 @@ placementBoard.addEventListener('mouseout', (e) => {
 });
 
 //player ship coordinate selection
-placementBoard.addEventListener('click', (e) => {
+placementBoard.addEventListener('mouseup', (e) => {
     const coordinates = getCoordinates(e);
     let invalidShip = handleHover(e, playerShip, playerOrientation);
     if (!invalidShip) {
