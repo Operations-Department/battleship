@@ -37,6 +37,7 @@ export function setupPlaceShipsUI() {
     //create semi-transparent overlay
     const overlay = document.createElement('div');
     overlay.classList.add('overlay');
+    overlay.id = 'overlay';
 
     page.appendChild(overlay);
 
@@ -143,7 +144,7 @@ export function handleHover(e, ship, orientation) {
                 if (overlap) {
                     cell.classList.remove('hoverHighlight');
                     cell. classList.add ('overboard');
-                    return invalidShipPlacement = true;
+                    invalidShipPlacement = true;
                 }
             }
             if (cell && invalidShipPlacement) {
@@ -164,7 +165,7 @@ export function handleHover(e, ship, orientation) {
                 if (overlap) {
                     cell.classList.remove('hoverHighlight');
                     cell. classList.add ('overboard');
-                    return invalidShipPlacement = true;
+                    invalidShipPlacement = true;
                 }
             }
             if (cell && invalidShipPlacement) {

@@ -27,12 +27,6 @@ const compCruiser = new Ship('Cruiser', 2);
 const player = new Player('Player', 'player');
 const computer = new Player('Computer', 'computer');
 
-player.gameboard.placeShip(playerAircraftCarrier, [0, 0], 'vertical', 'pAC');
-player.gameboard.placeShip(playerBattleship, [6, 2], 'horizontal', 'pB');
-player.gameboard.placeShip(playerDestroyer, [6, 6], 'vertical', 'pD');
-player.gameboard.placeShip(playerSubmarine, [5, 5], 'horizontal', 'pSUB');
-player.gameboard.placeShip(playerCruiser, [8, 9], 'vertical', 'pC');
-
 //place comp ships randomly
 computer.gameboard.placeRandomShip(compAircraftCarrier, 'cAC');
 computer.gameboard.placeRandomShip(compBattleship, 'cB');
@@ -64,6 +58,14 @@ const destroyer = document.getElementById('destroyer');
 const submarine = document.getElementById('submarine');
 const cruiser = document.getElementById('cruiser');
 
+const shipMapping = {
+    'Aircraft Carrier': [playerAircraftCarrier, 'pAC'],
+    'Battleship': [playerBattleship, 'pB'],
+    'Destroyer': [playerDestroyer, 'pD'],
+    'Submarine': [playerSubmarine, 'pSUB'],
+    'Cruiser': [playerCruiser, 'pC']
+};
+
 //ui visual for player ship placement
 placementBoard.addEventListener('mouseover', (e) => {
     handleHover(e, playerShip, playerOrientation);
@@ -83,7 +85,7 @@ placementBoard.addEventListener('click', (e) => {
     let invalidShip = handleHover(e, playerShip, playerOrientation);
     if (!invalidShip) {
         playerChoice.push([coordinates, playerOrientation, playerShip]);
-        // console.log(playerChoice);
+        console.log(playerChoice);
         monitorPlayerChoiceArray(playerChoice, placementBoard);
         showSelected(coordinates, playerShip, playerOrientation);
     }
@@ -149,12 +151,14 @@ function monitorPlayerChoiceArray(array, board) {
     });
 }
 
+//set default button selection
 //default select orientation and ship
 document.addEventListener('DOMContentLoaded', () => {
     horizontal.click();
     carrier.click();
 });
 
+//reset button
 //resets the board completely
 document.getElementById('reset').addEventListener('click', () => {
     playerChoice = [];
@@ -165,8 +169,31 @@ document.getElementById('reset').addEventListener('click', () => {
     });
     resetOccupiedCoordsArray();
     carrier.click();
-    // console.log(playerChoice);
+    console.log(playerChoice);
 });
+
+//confirmation button
+//confirm player ship placement, remove overlay, game begins 
+document.getElementById('confirm').addEventListener('click', () => {
+    const overlay = document.getElementById('overlay');
+    if (playerChoice.length === 5) overlay.remove();
+    handleShipPlacement(playerChoice);
+});
+
+//helper function to the confirmation button func
+//take info from player ship placement ui and place ships onto player board
+function handleShipPlacement(arr) {
+    for (let i = 0; i < arr.length; i++) {
+        const coordinates = arr[i][0].map(index => Number(index));
+        const orientation = arr[i][1];
+        const title = arr[i][2].name;
+
+        const shipInfo = shipMapping[title];
+
+        //place player ships onto player gameboard
+        player.gameboard.placeShip(shipInfo[0], coordinates, orientation, shipInfo[1]);
+    }
+}
 
 // player to start the game
 let playersTurn = true;
@@ -202,7 +229,7 @@ function computerAttack(gameFinished) {
         handleAttack(computer, player, coordinates, gameFinished);
         playersTurn = true;
 
-        // console.table(player.gameboard.board);
+        console.table(player.gameboard.board);
         // console.log('Coordinate is: ', coordinates);
         // console.log('Direct attack queue', directAttacksQ);
         // console.log(randomAttacksQ);
