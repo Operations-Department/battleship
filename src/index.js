@@ -4,7 +4,7 @@ const Player = require('./player');
 import { 
     setupBoardUI, setupPlaceShipsUI, 
     disableButton, changeCSS, 
-    handleAttack
+    handleAttack, resetButtons
 } from './domManager';
 
 //instantiate player's ships
@@ -45,8 +45,22 @@ setupPlaceShipsUI();
 setupBoardUI('player');
 setupBoardUI('computer');
 
-let playerChoice = [];
+//instantiate variables for player ship placement ui
 const placementBoard = document.getElementById('board');
+const buttonDiv = document.getElementById('buttonDiv');
+
+//this array will store the players ships placement details
+let playerChoice = [];
+let playerOrientation;
+let playerShip;
+
+//get player selection ui buttons
+const carrier = document.getElementById('carrier');
+const battleship = document.getElementById('battleship');
+const destroyer = document.getElementById('destroyer');
+const submarine = document.getElementById('submarine');
+const cruiser = document.getElementById('cruiser');
+
 //player ship coordinate selection
 placementBoard.addEventListener('click', (e) => {
     const coordinates = getCoordinates(e);
@@ -56,14 +70,7 @@ placementBoard.addEventListener('click', (e) => {
 });
 
 //player ship selection
-let playerShip;
-const carrier = document.getElementById('carrier');
-const battleship = document.getElementById('battleship');
-const destroyer = document.getElementById('destroyer');
-const submarine = document.getElementById('submarine');
-const cruiser = document.getElementById('cruiser');
-
-document.getElementById('buttonDiv').addEventListener('click', (e) => {
+buttonDiv.addEventListener('click', (e) => {
     switch (true) {
         case e.target === carrier:
             playerShip = playerAircraftCarrier;
@@ -94,7 +101,6 @@ document.getElementById('buttonDiv').addEventListener('click', (e) => {
 });
 
 //player ship orientation selection
-let playerOrientation;
 document.getElementById('orientationDiv').addEventListener('click', (e) => {
     const horizontal = document.getElementById('horizontal');
     const vertical = document.getElementById('vertical');
@@ -127,6 +133,15 @@ function monitorPlayerChoiceArray(array, board) {
 document.addEventListener('DOMContentLoaded', () => {
     horizontal.click();
     carrier.click();
+});
+
+//reset the board and clear the playerchoice array
+document.getElementById('reset').addEventListener('click', () => {
+    playerChoice = [];
+    changeCSS(placementBoard);
+    resetButtons(buttonDiv);
+    carrier.click();
+    console.log(playerChoice);
 });
 
 // player to start the game

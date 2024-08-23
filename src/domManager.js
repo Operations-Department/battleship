@@ -115,6 +115,13 @@ export function disableButton(button, board) {
     board.classList.add('forbiddenButton');
 }
 
+export function resetButtons(buttonDiv) {
+    const buttons = buttonDiv.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.classList.remove('forbiddenButton');
+    });
+}
+
 //more responsive button selection ui
 export function changeCSS(board) {
     board.classList.remove('forbiddenButton');
