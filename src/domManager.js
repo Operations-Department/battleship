@@ -1,7 +1,11 @@
 //setup player and comp board ui
 export function setupBoardUI(boardID) {
     const board = document.getElementById(`${boardID}-board`);
+    createBoard(board);
+};
 
+function createBoard(board) {
+   
     //create rows of grid
     for (let i = 0; i < 10; i++) {
         const row = document.createElement('div');
@@ -20,7 +24,106 @@ export function setupBoardUI(boardID) {
 
         board.appendChild(row);
     }
-};
+}
+
+export function setupPlaceShipsUI() {
+    const page = document.getElementById('app');
+
+    //create semi-transparent overlay
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+
+    page.appendChild(overlay);
+
+    const title = document.createElement('h1');
+    title.textContent = 'Place your formation, Captain';
+    overlay.appendChild(title);
+
+    const uiBody = document.createElement('div');
+    uiBody.classList.add('uiBody');
+    overlay.appendChild(uiBody);
+
+    const orientationDiv = document.createElement('div');
+    orientationDiv.classList.add('orientationDiv');
+    orientationDiv.id = 'orientationDiv';
+
+    uiBody.appendChild(orientationDiv);
+
+    const horizontalButton = document.createElement('button');
+    horizontalButton.id = 'horizontal';
+    horizontalButton.textContent = 'Horizontal';
+    const verticalButton = document.createElement('button');
+    verticalButton.id = 'vertical';
+    verticalButton.textContent = 'Vertical';
+
+    orientationDiv.appendChild(horizontalButton);
+    orientationDiv.appendChild(verticalButton);
+
+    const board = document.createElement('div');
+    createBoard(board);
+    board.id = 'board';
+
+    uiBody.appendChild(board);
+
+    const buttonDiv = document.createElement('div');
+    buttonDiv.classList.add('buttonDiv');
+    buttonDiv.id = 'buttonDiv';
+
+    uiBody.appendChild(buttonDiv);
+
+    const carrierButton = document.createElement('button');
+    carrierButton.textContent = 'Carrier';
+    const battleshipButton = document.createElement('button');
+    battleshipButton.textContent = 'Battleship';
+    const destroyerButton = document.createElement('button');
+    destroyerButton.textContent = 'Destroyer';
+    const submarineButton = document.createElement('button');
+    submarineButton.textContent = 'Submarine';
+    const cruiserButton = document.createElement('button');
+    cruiserButton.textContent = 'Cruiser';
+
+    buttonDiv.appendChild(carrierButton);
+    carrierButton.id = 'carrier';
+    buttonDiv.appendChild(battleshipButton);
+    battleshipButton.id = 'battleship';
+    buttonDiv.appendChild(destroyerButton);
+    destroyerButton.id = 'destroyer';
+    buttonDiv.appendChild(submarineButton);
+    submarineButton.id = 'submarine';
+    buttonDiv.appendChild(cruiserButton);
+    cruiserButton.id = 'cruiser';
+
+    const confirmationDiv = document.createElement('div');
+    confirmationDiv.classList.add('confirmationDiv');
+    confirmationDiv.id = 'confirmationDiv';
+    overlay.appendChild(confirmationDiv);
+
+    const reset = document.createElement('button');
+    reset.textContent = 'Reset';
+    reset.id = 'reset';
+    const confirm = document.createElement('button');
+    confirm.textContent = 'Confirm';
+    confirm.id = 'confirm';
+
+    confirmationDiv.appendChild(reset);
+    confirmationDiv.appendChild(confirm);
+}
+
+//disables player from placing one ship in multiple spots
+export function disableButton(button, board) {
+    button.classList.add('forbiddenButton');
+    board.classList.add('forbiddenButton');
+}
+
+//more responsive button selection ui
+export function changeCSS(board) {
+    board.classList.remove('forbiddenButton');
+    const div = document.getElementById('buttonDiv');
+    const buttons = div.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.classList.remove('selectedButton');
+    });
+}
 
 //receive coordinates
 export function handleAttack(player, opponent, coordinates, gameFinished) {
@@ -52,8 +155,7 @@ function updateUI(player, result, coordinates) {
     const cell = document.querySelector(`.${player}-board [data-x="${x}"][data-y="${y}"]`);
     
     //disable from being clicked again
-    cell.style.cursor = 'not-allowed';
-    cell.style.pointerEvents = 'none';
+    cell.classList.add('forbiddenButton');
 
     if (result === 'Miss') cell.textContent = 'o';
     else if (result === 'Hit!') {

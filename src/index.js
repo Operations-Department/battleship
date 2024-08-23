@@ -1,7 +1,11 @@
 const Ship = require('./ship');
 const Gameboard = require('./gameboard');
 const Player = require('./player');
-import { setupBoardUI, handleAttack } from './domManager';
+import { 
+    setupBoardUI, setupPlaceShipsUI, 
+    disableButton, changeCSS, 
+    handleAttack
+} from './domManager';
 
 //instantiate player's ships
 const playerAircraftCarrier = new Ship('Aircraft Carrier', 5);
@@ -27,17 +31,106 @@ player.gameboard.placeShip(playerDestroyer, [6, 6], 'vertical', 'pD');
 player.gameboard.placeShip(playerSubmarine, [5, 5], 'horizontal', 'pSUB');
 player.gameboard.placeShip(playerCruiser, [8, 9], 'vertical', 'pC');
 
+//place comp ships randomly
 computer.gameboard.placeRandomShip(compAircraftCarrier, 'cAC');
 computer.gameboard.placeRandomShip(compBattleship, 'cB');
 computer.gameboard.placeRandomShip(compDestroyer, 'cD');
 computer.gameboard.placeRandomShip(compSubmarine, 'cSUB');
 computer.gameboard.placeRandomShip(compCruiser, 'cC');
 
+//setup ui to place player's ships
+setupPlaceShipsUI();
+
+//setup player and comp boards
 setupBoardUI('player');
 setupBoardUI('computer');
 
-let playersTurn = true;
+let playerChoice = [];
+const placementBoard = document.getElementById('board');
+//player ship coordinate selection
+placementBoard.addEventListener('click', (e) => {
+    const coordinates = getCoordinates(e);
+    playerChoice.push([coordinates, playerOrientation, playerShip]);
+    console.log(playerChoice);
+    monitorPlayerChoiceArray(playerChoice, placementBoard);
+});
 
+//player ship selection
+let playerShip;
+const carrier = document.getElementById('carrier');
+const battleship = document.getElementById('battleship');
+const destroyer = document.getElementById('destroyer');
+const submarine = document.getElementById('submarine');
+const cruiser = document.getElementById('cruiser');
+
+document.getElementById('buttonDiv').addEventListener('click', (e) => {
+    switch (true) {
+        case e.target === carrier:
+            playerShip = playerAircraftCarrier;
+            changeCSS(placementBoard);
+            carrier.classList.add('selectedButton');
+            break;
+        case e.target === battleship:
+            playerShip = playerBattleship;
+            changeCSS(placementBoard);
+            battleship.classList.add('selectedButton');
+            break;
+        case e.target === destroyer:
+            playerShip = playerDestroyer;
+            changeCSS(placementBoard);
+            destroyer.classList.add('selectedButton');
+            break;
+        case e.target === submarine:
+            playerShip = playerSubmarine;
+            changeCSS(placementBoard);
+            submarine.classList.add('selectedButton');
+            break;
+        case e.target === cruiser:
+            playerShip = playerCruiser;
+            changeCSS(placementBoard);
+            cruiser.classList.add('selectedButton');
+            break;
+    }
+});
+
+//player ship orientation selection
+let playerOrientation;
+document.getElementById('orientationDiv').addEventListener('click', (e) => {
+    const horizontal = document.getElementById('horizontal');
+    const vertical = document.getElementById('vertical');
+
+    if (e.target === vertical) {
+        playerOrientation = 'vertical';
+        vertical.classList.add('selectedButton');
+        horizontal.classList.remove('selectedButton');
+    } else {
+        playerOrientation = 'horizontal';
+        vertical.classList.remove('selectedButton');
+        horizontal.classList.add('selectedButton');
+    }
+});
+
+//monitors what has been added into the playerchoice array
+//if a ship has been added to the array, that ship cannot be added again
+function monitorPlayerChoiceArray(array, board) {
+    array.forEach(index => {
+        let shipInfo = index[2];
+        if (shipInfo === playerAircraftCarrier) disableButton(carrier, board);
+        if (shipInfo === playerBattleship) disableButton(battleship, board);
+        if (shipInfo === playerDestroyer) disableButton(destroyer, board);
+        if (shipInfo === playerSubmarine) disableButton(submarine, board);
+        if (shipInfo === playerCruiser) disableButton(cruiser, board);
+    });
+}
+
+//default select orientation and ship
+document.addEventListener('DOMContentLoaded', () => {
+    horizontal.click();
+    carrier.click();
+});
+
+// player to start the game
+let playersTurn = true;
 //click cell to trigger attack on opponent
 document.getElementById('computer-board').addEventListener('click', (e) => {
     if (!playersTurn) {
