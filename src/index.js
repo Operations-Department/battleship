@@ -109,6 +109,7 @@ placementBoard.addEventListener('mouseup', (e) => {
         playerChoice.push([coordinates, playerOrientation, playerShip]);
         monitorPlayerChoiceArray(playerChoice, placementBoard);
         showSelected(coordinates, playerShip, playerOrientation);
+        validateConfirmButton();
     }
 });
 
@@ -177,6 +178,7 @@ function monitorPlayerChoiceArray(array, board) {
 document.addEventListener('DOMContentLoaded', () => {
     horizontal.click();
     carrier.click();
+    confirmButton.classList.add('forbiddenButton');
 });
 
 //reset button
@@ -190,16 +192,22 @@ document.getElementById('reset').addEventListener('click', () => {
     });
     resetOccupiedCoordsArray();
     carrier.click();
+    confirmButton.classList.add('forbiddenButton');
 });
 
-//confirmation button
 //confirm player ship placement, remove overlay, game begins 
-document.getElementById('confirm').addEventListener('click', () => {
+const confirmButton = document.getElementById('confirm');
+confirmButton.addEventListener('click', () => {
     const overlay = document.getElementById('overlay');
     if (playerChoice.length === 5) overlay.remove();
     handleShipPlacement(playerChoice);
     showOccupiedSpots();
 });
+
+function validateConfirmButton() {
+    if (playerChoice.length === 5) confirmButton.classList.remove('forbiddenButton');
+};
+
 
 //helper function to the confirmation button func
 //take info from player ship placement ui and place ships onto player board
