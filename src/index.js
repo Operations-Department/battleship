@@ -6,7 +6,8 @@ import {
     disableButton, changeCSS, 
     handleAttack, resetButtons,
     handleHover, showSelected,
-    resetOccupiedCoordsArray, resetDesiredCoordsArray
+    resetOccupiedCoordsArray, resetDesiredCoordsArray,
+    showOccupiedSpots
 } from './domManager';
 
 //attack sound fx
@@ -197,6 +198,7 @@ document.getElementById('confirm').addEventListener('click', () => {
     const overlay = document.getElementById('overlay');
     if (playerChoice.length === 5) overlay.remove();
     handleShipPlacement(playerChoice);
+    showOccupiedSpots();
 });
 
 //helper function to the confirmation button func

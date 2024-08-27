@@ -191,6 +191,17 @@ function compareDesiredOccupiedCoords() {
     return newDesired.some(element => newOccupied.includes(element));
 }
 
+export function showOccupiedSpots() {
+    occupiedCoords.forEach(index => {
+        let [x, y] = index;
+        x = Number(x);
+        y = Number(y);
+
+        const cell = document.querySelector(`#player-board .cell[data-x="${x}"][data-y="${y}"]`);
+        cell.classList.add('occupiedCell');
+    });
+}
+
 //show selected position as highlighted on the board permanently
 export function showSelected(coordinates, ship, orientation) {
     let [x, y] = coordinates;
