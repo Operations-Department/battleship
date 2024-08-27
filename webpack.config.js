@@ -42,10 +42,22 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.(jpg|jpeg|png|gif|svg)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[hash].[ext]',
+              outputPath: 'images/',
+            }
+          }
+        ]
       }
     ]
   },
-  mode: 'development',
+  mode: 'production',
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
     port: 9000
