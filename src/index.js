@@ -206,14 +206,15 @@ function handleShipPlacement(arr) {
 // player to start the game
 let playersTurn = true;
 //click cell to trigger attack on opponent
-document.getElementById('computer-board').addEventListener('click', (e) => {
+const computerBoard = document.getElementById('computer-board');
+computerBoard.addEventListener('click', (e) => {
     if (!playersTurn) {
         computerAttack();
         return;
     };
     const coordinates = getCoordinates(e);
-
     attack2.play();
+    computerBoard.classList.add('forbiddenButton');
 
     setTimeout(() => {
         let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
@@ -244,6 +245,7 @@ function computerAttack(gameFinished) {
     setTimeout(() => {
         handleAttack(computer, player, coordinates, gameFinished);
         playersTurn = true;
+        computerBoard.classList.remove('forbiddenButton');
 
         console.table(player.gameboard.board);
         // console.log('Coordinate is: ', coordinates);
