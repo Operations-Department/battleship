@@ -9,6 +9,14 @@ import {
     resetOccupiedCoordsArray, resetDesiredCoordsArray
 } from './domManager';
 
+import brrrt from './sounds/brrrt.mp3';
+import fireEcho from './sounds/fireEcho.mp3';
+import missile from './sounds/missile.mp3';
+
+const attack1 = new Audio(brrrt);
+const attack2 = new Audio(fireEcho);
+const attack3 = new Audio(missile);
+
 //instantiate player's ships
 const playerAircraftCarrier = new Ship('Aircraft Carrier', 5);
 const playerBattleship = new Ship('Battleship', 4);
@@ -205,13 +213,19 @@ document.getElementById('computer-board').addEventListener('click', (e) => {
     };
     const coordinates = getCoordinates(e);
 
+    attack2.play();
+
     setTimeout(() => {
         let gameFinished = handleAttack(player, computer, coordinates, gameFinished);
-        playersTurn = false;
-        computerAttack(gameFinished);    
+
+        setTimeout(() => {
+            playersTurn = false;
+            computerAttack(gameFinished);    
+        }, 2000);
+
         console.table(computer.gameboard.board);
         // console.log('computer ships', computer.gameboard.compShipsObject);
-    }, 0);
+    }, 2000);
 });
 
 //computer attacks random spot
@@ -219,6 +233,8 @@ function computerAttack(gameFinished) {
     if (playersTurn || gameFinished) return;
 
     let coordinates;
+
+    attack3.play();
 
     //if ship already hit - attack the rest
     if (directAttacksQ.length) coordinates = directAttacksQ.shift();
@@ -233,7 +249,7 @@ function computerAttack(gameFinished) {
         // console.log('Coordinate is: ', coordinates);
         // console.log('Direct attack queue', directAttacksQ);
         // console.log(randomAttacksQ);
-    }, 0);
+    }, 2000);
 }
 
 //get coordinates when computer board cell clicked

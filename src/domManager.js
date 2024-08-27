@@ -1,4 +1,9 @@
 import { getCoordinates } from "./index";
+import bigSplash from './sounds/bigSplash.mp3';
+import hitEcho from './sounds/hitEcho.mp3';
+
+const missSound = new Audio(bigSplash);
+const hitSound = new Audio(hitEcho);
 
 let occupiedCoords = [];    
 let desiredCoords = [];
@@ -250,6 +255,8 @@ export function handleAttack(player, opponent, coordinates, gameFinished) {
     // console.table(opponent.gameboard.board);
     // console.log(player, result);
 
+    playSound(result);
+
     //update ui to reflect changes
     updateUI(opponent.type, result, coordinates);
 
@@ -274,13 +281,24 @@ function updateUI(player, result, coordinates) {
     //disable from being clicked again
     cell.classList.add('forbiddenButton');
 
-    if (result === 'Miss') cell.textContent = 'o';
-    else if (result === 'Hit!') {
-        cell.textContent = 'x';
-        cell.style.color = 'red';
+    const marker = document.createElement('div');
+    marker.id = 'marker';
+
+    if (result === 'Miss') {
+        cell.appendChild(marker);
+        marker.classList.add('markerMiss');
+    } else if (result === 'Hit!') {
+        cell.appendChild(marker);
+        marker.classList.add('markerHit');
     }
     else console.error(new Error('Something wrong happened'));
 };
+
+//play splash sound if miss or boom if hit
+function playSound(result) {
+    if (result === 'Miss') missSound.play();
+    else hitSound.play();
+}
 
 function gameOver(player) {
 

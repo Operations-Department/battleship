@@ -17,6 +17,30 @@ module.exports = {
             presets: ['@babel/preset-env']
           }
         }
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[hash].[ext]',
+              outputPath: 'fonts/', 
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(mp3|wav|ogg)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[hash].[ext]',
+              outputPath: 'sounds/',
+            }
+          }
+        ]
       }
     ]
   },
