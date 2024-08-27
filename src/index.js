@@ -1,6 +1,7 @@
 const Ship = require('./ship');
 const Gameboard = require('./gameboard');
 const Player = require('./player');
+import './styles.css';
 import { 
     setupBoardUI, setupPlaceShipsUI, 
     disableButton, changeCSS, 

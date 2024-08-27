@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: 'CustomFont';
-    src: url('../src/fonts/Doom2016Text-GOlBq.ttf') format('truetype');
+    src: url('./fonts/Doom2016Text-GOlBq.ttf') format('truetype');
     font-weight: normal;
     font-style: normal; 
 }
@@ -39,7 +39,7 @@ html {
     width: 100%;
     height: 100%;
 
-    background-image: url(../src/img/background.jpg); 
+    background-image: url(./img/background.jpg); 
     /* background-color: rgba(43, 79, 164, 0.793); */
 
     /* background-attachment: fixed;
@@ -294,7 +294,7 @@ button.forbiddenButton {
 }
 
 .github-icon {
-    background: url(../src/img/github.png);
+    background: url(./img/github.png);
     background-size: cover;
     background-color: transparent;
     filter: invert(1);

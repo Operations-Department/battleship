@@ -1,3 +1,5 @@
+const { hash } = require('crypto');
+const { name } = require('file-loader');
 const path = require('path');
 
 module.exports = {
@@ -10,7 +12,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.js$/i,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -20,7 +26,7 @@ module.exports = {
         }
       },
       {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
         use: [
           {
             loader: 'file-loader',
@@ -33,7 +39,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(mp3|wav|ogg)$/,
+        test: /\.(mp3|wav|ogg)$/i,
         use: [
           {
             loader: 'file-loader',
@@ -46,14 +52,14 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|jpeg|png|gif|svg)$/,
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
         use: [
           {
             loader: 'file-loader',
             options: {
               name: '[name].[hash].[ext]',
-              outputPath: 'images/',
-              publicPath: 'images/',
+              outputPath: 'img/',
+              publicPath: 'img/',
             }
           }
         ]
