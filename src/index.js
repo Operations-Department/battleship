@@ -9,13 +9,26 @@ import {
     resetOccupiedCoordsArray, resetDesiredCoordsArray
 } from './domManager';
 
+//attack sound fx
 import brrrt from './sounds/brrrt.mp3';
 import fireEcho from './sounds/fireEcho.mp3';
 import missile from './sounds/missile.mp3';
+import mortar from './sounds/mortar.mp3';
+import phalanx from './sounds/phalanx.mp3';
 
 const attack1 = new Audio(brrrt);
 const attack2 = new Audio(fireEcho);
 const attack3 = new Audio(missile);
+const attack4 = new Audio(mortar);
+const attack5 = new Audio(phalanx);
+
+const attackSounds = {
+    1: attack1,
+    2: attack2,
+    3: attack3,
+    4: attack4,
+    5: attack5
+}
 
 //instantiate player's ships
 const playerAircraftCarrier = new Ship('Aircraft Carrier', 5);
@@ -93,7 +106,6 @@ placementBoard.addEventListener('mouseup', (e) => {
     let invalidShip = handleHover(e, playerShip, playerOrientation);
     if (!invalidShip) {
         playerChoice.push([coordinates, playerOrientation, playerShip]);
-        console.log(playerChoice);
         monitorPlayerChoiceArray(playerChoice, placementBoard);
         showSelected(coordinates, playerShip, playerOrientation);
     }
@@ -177,7 +189,6 @@ document.getElementById('reset').addEventListener('click', () => {
     });
     resetOccupiedCoordsArray();
     carrier.click();
-    console.log(playerChoice);
 });
 
 //confirmation button
@@ -192,6 +203,7 @@ document.getElementById('confirm').addEventListener('click', () => {
 //take info from player ship placement ui and place ships onto player board
 function handleShipPlacement(arr) {
     for (let i = 0; i < arr.length; i++) {
+
         const coordinates = arr[i][0].map(index => Number(index));
         const orientation = arr[i][1];
         const title = arr[i][2].name;
@@ -205,15 +217,22 @@ function handleShipPlacement(arr) {
 
 // player to start the game
 let playersTurn = true;
-//click cell to trigger attack on opponent
+//click cell to trigger attack on comp
 const computerBoard = document.getElementById('computer-board');
 computerBoard.addEventListener('click', (e) => {
+    
     if (!playersTurn) {
         computerAttack();
         return;
     };
+
     const coordinates = getCoordinates(e);
-    attack2.play();
+
+    //attack sound effect
+    const number = genNum125();
+    attackSounds[number].play();
+
+    //bugFix - prevent spam clicking
     computerBoard.classList.add('forbiddenButton');
 
     setTimeout(() => {
@@ -224,8 +243,6 @@ computerBoard.addEventListener('click', (e) => {
             computerAttack(gameFinished);    
         }, 2000);
 
-        console.table(computer.gameboard.board);
-        // console.log('computer ships', computer.gameboard.compShipsObject);
     }, 2000);
 });
 
@@ -235,10 +252,12 @@ function computerAttack(gameFinished) {
 
     let coordinates;
 
-    attack3.play();
+    const number = genNum125();
+    attackSounds[number].play();
 
     //if ship already hit - attack the rest
     if (directAttacksQ.length) coordinates = directAttacksQ.shift();
+
     //else attack a random spot
     else coordinates = generateRandomCoordinates();
 
@@ -246,11 +265,6 @@ function computerAttack(gameFinished) {
         handleAttack(computer, player, coordinates, gameFinished);
         playersTurn = true;
         computerBoard.classList.remove('forbiddenButton');
-
-        console.table(player.gameboard.board);
-        // console.log('Coordinate is: ', coordinates);
-        // console.log('Direct attack queue', directAttacksQ);
-        // console.log(randomAttacksQ);
     }, 2000);
 }
 
@@ -258,7 +272,6 @@ function computerAttack(gameFinished) {
 export function getCoordinates(e) {
     const x = e.target.dataset.x;
     const y = e.target.dataset.y;
-
     return [x, y];
 }
 
@@ -283,8 +296,8 @@ function generateRandomCoordinates() {
     return coordinates;
 }
 
+//for comp to attack remaining ship parts after a hit
 let directAttacksQ = [];
-
 let allPlayerPositions = [
     [player.gameboard.playerACLocation], 
     [player.gameboard.playerBLocation], 
@@ -332,4 +345,11 @@ function adjustRandomAttacksArray() {
     let num = directAttacksQ.map(array => array.join('')).map((index) => Number(index));
 
     randomAttacksQ = randomAttacksQ.filter(index => !num.includes(index));
+}
+
+//generates a number 1-5 used for the attack sound effects 
+function genNum125() {
+    const number = (Math.floor(Math.random() * 5) + 1);
+
+    return number;
 }

@@ -1,3 +1,4 @@
+//sounds effect for a hit or miss
 import { getCoordinates } from "./index";
 import bigSplash from './sounds/bigSplash.mp3';
 import hitEcho from './sounds/hitEcho.mp3';
@@ -252,20 +253,19 @@ export function handleAttack(player, opponent, coordinates, gameFinished) {
     //send attack to gameboard/ship objects
     const result = opponent.gameboard.receiveAttack(coordinates);
     
-    // console.table(opponent.gameboard.board);
-    // console.log(player, result);
-
+    //play sound of being hit or missed
     playSound(result);
 
     //update ui to reflect changes
-    updateUI(opponent.type, result, coordinates);
+    //timeout func - ui change and sound plays at the exact same time
+    setTimeout(() => {
+        updateUI(opponent.type, result, coordinates);
+    }, 500);
 
     gameFinished = false;
 
     //check gameover
     if (opponent.gameboard.allPlayerShipsSunk() || opponent.gameboard.allCompShipsSunk()) {
-        // console.log(`${player.name}`, player.gameboard);
-        // console.log(`${opponent.name}`, opponent.gameboard);
         gameOver(player);
         gameFinished = true;
     }
@@ -294,7 +294,7 @@ function updateUI(player, result, coordinates) {
     else console.error(new Error('Something wrong happened'));
 };
 
-//play splash sound if miss or boom if hit
+//play splash sound if miss, boom if hit
 function playSound(result) {
     if (result === 'Miss') missSound.play();
     else hitSound.play();
@@ -333,6 +333,6 @@ function gameOver(player) {
     overlay.appendChild(restart);
 
     restart.addEventListener('click', () => {
-        window.location.reload(); //reload the page
+        window.location.reload(); //reload the page - start a new game
     });
 }
