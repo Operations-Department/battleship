@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="../src/img/battleship.png" type="image/x-icon">
+    <title>Battleship</title>
+</head>
+<body>
+    <div id="app">
+        <div class="background"></div>
+        <div id="header">
+            <h1 id="title">Battleship</h1>
+        </div>
+
+        <div id="body">
+            <div id="player-side">
+                <div id="player-container">
+                    <h2>Friendly Waters</h2> 
+                    <div id="player-board" class="player-board"></div>
+                </div>
+            </div>
+            <div id="computer-side">
+                <div id="computer-container">
+                    <h2>Hostile Waters</h2> 
+                    <div id="computer-board" class="computer-board"></div>    
+                </div>
+            </div>
+        </div>
+        
+        <footer id="footer">
+            <p>&copy; 2024 Operations-Department </p>
+            <a href="https://github.com/Operations-Department/battleship" target="_blank">
+                <div class="github-icon"></div>
+            </a>
+        </footer>
+    </div>
+
+    <script src="bundle.js"></script>
+</body>
+</html>

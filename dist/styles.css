@@ -1,0 +1,304 @@
+:root {
+    --border-radius: 8px;
+}
+
+@font-face {
+    font-family: 'CustomFont';
+    src: url('../src/fonts/Doom2016Text-GOlBq.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal; 
+}
+
+* {
+    margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: 'CustomFont', sans-serif;
+    height:100%;
+    width:100%;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr 4fr 0.5fr;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-image: url(../src/img/background.jpg); 
+    /* background-color: rgba(43, 79, 164, 0.793); */
+
+    /* background-attachment: fixed;
+    background-position: 100% 100%; */
+
+    background-repeat: no-repeat; 
+    background-position: center;
+    background-attachment: fixed;       
+    webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    filter: blur(5px);
+    z-index: -1;
+}
+
+#header,
+#body,
+#footer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#header {
+    justify-content: center;
+}
+
+#title,
+h2 {
+    color: white;
+    align-self: center;
+}
+
+h1,
+#title {
+    font-size: 7rem;
+}
+
+h2 {
+    font-size: 4rem;
+}
+
+#body {
+    gap: 6rem;
+}
+
+#player-side,
+#computer-side {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#player-side {
+    align-items: flex-end;
+}
+
+#computer-side {
+    align-items: flex-start;
+}
+
+#player-container,
+#computer-container {
+    height: 80%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    background: rgba(0, 0, 0, 0.501);
+    gap: 1rem;
+}
+
+#board,
+#player-board, 
+#computer-board {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius);
+}
+
+#board {
+    background: radial-gradient(
+    rgba(2, 0, 36, 0) 15%, 
+    rgba(255, 255, 255, 0.1) 60%, 
+    rgba(255, 255, 255, 0.25) 85%, 
+    rgba(255, 255, 255, 0.4) 100%);
+}
+
+#player-board {
+    background: radial-gradient(
+    rgba(2, 0, 36, 0) 15%, 
+    rgba(30, 210, 205, 0.1) 60%, 
+    rgba(30, 210, 205, 0.25) 85%, 
+    rgba(30, 210, 205, 0.40) 100%);
+}
+
+#computer-board {
+    background: radial-gradient(
+    rgba(2, 0, 36, 0) 15%, 
+    rgba(210, 30, 34, 0.1) 60%, 
+    rgba(210, 30, 34, 0.25) 85%, 
+    rgba(210, 30, 34, 0.4) 100%);
+}
+
+
+#player-board, 
+#computer-board {
+    width: 100%;
+    height: 90%;
+}
+
+#board {
+    height: 100%;
+    width: 30%;
+}
+
+.uiBody {
+    height: 60%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.orientationDiv,
+.buttonDiv {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    gap: 40px;
+}
+
+button {
+    border-radius: var(--border-radius);
+    width: 16rem;
+    font-size: 4rem;
+    transition: ease-in-out 300ms;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.confirmationDiv {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.row {
+    display: flex;
+    width: 100%;
+    height: 10%;
+}
+
+.cell {
+    border: 1px solid #ffffff70;
+    width: 100%;
+    height: 100%;
+    /* transition: ease-in-out 0.3s; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.5rem;
+}
+
+.cell:hover {
+    cursor: crosshair;
+    background: rgba(255, 255, 255, 0.818);
+    /* background: white; */
+    transform: scale(1.01);
+}
+
+.selectedHighlight,
+.hoverHighlight {
+    background-color: rgba(30, 210, 39, 0.563);
+}
+
+.hoverHighlight {
+    border: 1px solid white;
+}
+
+.overboard {
+    background-color: rgba(136, 0, 0, 0.807);
+    cursor: not-allowed;
+}
+
+.overlay {
+    position: absolute;
+    z-index: 100;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    justify-content: center;
+    color: white;
+    background: rgb(0 0 0 / 90%);
+    font-size: 3rem;
+    gap: 2rem;
+}
+
+.selectedButton {
+    background: none;
+    color: white;
+    border: 1px solid white;
+}
+
+.forbiddenButton {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+button.forbiddenButton {
+    text-decoration: line-through;
+    font-size: 0px;
+}
+
+.occupiedCell {
+    background-color: #938c3d8c;
+}
+
+#marker {
+    border-radius: 60px;
+    height: 1rem;
+    width: 1rem;
+}
+
+.markerMiss {
+    background-color: white;    
+}
+
+.markerHit {
+    background-color: red;
+}
+
+#footer {
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+}
+
+.github-icon {
+    background: url(../src/img/github.png);
+    background-size: cover;
+    background-color: transparent;
+    filter: invert(1);
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+}
