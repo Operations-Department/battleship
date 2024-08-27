@@ -26,7 +26,8 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[hash].[ext]',
-              outputPath: 'fonts/', 
+              outputPath: 'fonts/',
+              publicPath: 'fonts/',
             }
           }
         ]
@@ -39,6 +40,7 @@ module.exports = {
             options: {
               name: '[name].[hash].[ext]',
               outputPath: 'sounds/',
+              publicPath: 'sounds/',
             }
           }
         ]
@@ -51,6 +53,7 @@ module.exports = {
             options: {
               name: '[name].[hash].[ext]',
               outputPath: 'images/',
+              publicPath: 'images/',
             }
           }
         ]
