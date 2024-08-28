@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: 'CustomFont';
-    src: url('./fonts/Doom2016Text-GOlBq.ttf') format('truetype');
+    src: url('../src/fonts/Doom2016Text-GOlBq.ttf') format('truetype');
     font-weight: normal;
     font-style: normal; 
 }
