@@ -2,6 +2,9 @@ const Ship = require('./ship');
 const Gameboard = require('./gameboard');
 const Player = require('./player');
 import './styles.css';
+import background from './img/background.jpg';
+import icon from './img/github.png';
+
 import { 
     setupBoardUI, setupPlaceShipsUI, 
     disableButton, changeCSS, 
@@ -17,6 +20,12 @@ import fireEcho from './sounds/fireEcho.mp3';
 import missile from './sounds/missile.mp3';
 import mortar from './sounds/mortar.mp3';
 import phalanx from './sounds/phalanx.mp3';
+
+//image items for webpack
+const backgroundElement = document.getElementById('background');
+backgroundElement.style.backgroundImage = `url(${background})`;
+const footerIcon = document.getElementById('github-icon');
+footerIcon.style.backgroundImage = `url(${icon})`;
 
 const attack1 = new Audio(brrrt);
 const attack2 = new Audio(fireEcho);
