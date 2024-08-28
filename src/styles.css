@@ -9,6 +9,20 @@
     font-style: normal; 
 }
 
+@font-face {
+    font-family: 'AnotherFont';
+    src: url('../src/fonts/Doom2016Left-RpJDA.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal; 
+}
+
+@font-face {
+    font-family: 'MoreFont';
+    src: url('../src/fonts/Doom2016Right-VGz0z.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal; 
+}
+
 * {
     margin: 0;
 	padding: 0;
@@ -78,11 +92,11 @@ h2 {
 
 h1,
 #title {
-    font-size: 7rem;
+    font-size: 6rem;
 }
 
 h2 {
-    font-size: 4rem;
+    font-size: 3rem;
 }
 
 #body {
@@ -183,7 +197,7 @@ h2 {
 button {
     border-radius: var(--border-radius);
     width: 16rem;
-    font-size: 4rem;
+    font-size: 3rem;
     transition: ease-in-out 300ms;
 }
 
@@ -214,7 +228,7 @@ button:hover {
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
 }
 
 .cell:hover {
@@ -249,7 +263,7 @@ button:hover {
     justify-content: center;
     color: white;
     background: rgb(0 0 0 / 90%);
-    font-size: 3rem;
+    font-size: 2rem;
     gap: 2rem;
 }
 
@@ -290,7 +304,7 @@ button.forbiddenButton {
 #footer {
     justify-content: center;
     color: white;
-    font-size: 2rem;
+    font-size: 1rem;
 }
 
 .github-icon {
